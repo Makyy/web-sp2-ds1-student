@@ -1,4 +1,4 @@
 [submodule "ds1-core"]
 	path = ds1-core
-	url = git@github.com:madostal/web-sp2-ds1-core.git
+	url = https://github.com/madostal/web-sp2-ds1-core
 	branch = master
