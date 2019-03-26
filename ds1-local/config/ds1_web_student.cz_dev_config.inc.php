@@ -6,7 +6,7 @@
 
     // ZAKLADNI INFORMACE O DOMENE
     // domena bez http
-    define("DS1_DOMAIN_URL", "localhost");
+    define("DS1_DOMAIN_URL", "SI");
     define("DS1_DOMAIN_IN_PRODUCTION", false);
     define("DS1_DOMAIN_USE_HTTPS", false);
     define("DS1_DOMAIN_USE_FRIENDLY_URL", false);
@@ -14,10 +14,10 @@
     // JEN RELATIVE PATH DLE CONTEXTU
     // TODO tohle si nastavte dle vlastni cesty na localhostu = nazev adresare
     if (DS1_CONTEXT == DS1_CONTEXT_VALUE_WEB) {
-        define("DS1_DOMAIN_RELATIVE_PATH_ADD", "/github_web-sp2-ds1-student/web");
+        define("DS1_DOMAIN_RELATIVE_PATH_ADD", "/");
     }
     else if (DS1_CONTEXT == DS1_CONTEXT_VALUE_ADMIN) {
-        define("DS1_DOMAIN_RELATIVE_PATH_ADD", "/github_web-sp2-ds1-student/web/admin");
+        define("DS1_DOMAIN_RELATIVE_PATH_ADD", "/admin");
     }
 
     // PRIPOJENI K DB

@@ -3,3 +3,4 @@ vendor/
 web/admin/node_modules/
 cache/
 ds1-local/config/backup_online/
+web/admin/package-lock.json
