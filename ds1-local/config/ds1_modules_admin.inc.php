@@ -80,7 +80,22 @@
     // pridat modul
     $modules_admin[] = $module;
 
-    // **************   KONEC Modul sluzby         ****************************************
+
+    // ************************************************************************************
+    // **************   Modul sluzby        ***********************************************
+
+    // novy modul
+    $module = array();
+    $module["name"] = "human";
+    $module["title"] = "Defekty obyvatel";
+    $module["route_name"] = "human";
+    $module["route_path"] = "/plugin/$module[name]";
+    $module["route"] = array("controller_name" => "human_controller", "controller_action" => "indexAction");
+
+    // pridat modul
+    $modules_admin[] = $module;
+
+// **************   KONEC Modul sluzby         ****************************************
     // ************************************************************************************
 
 
