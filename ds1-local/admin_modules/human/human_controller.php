@@ -49,8 +49,9 @@ class human_controller  extends ds1_base_controller
         $content_params["controller"] = $this;
 
 
-        $defects [] = [-1, -5, "Something"];
-        $defects [] = [-85, -33, "Hořííííííí"];
+        $defects [] = [1, 5, "Something"];
+        //$defects [] = [-85, -33, "Hořííííííí"];
+        $defects [] = [20, 20, "nové"];
 
         $content_params["defects"] = $defects;
         $content = "";

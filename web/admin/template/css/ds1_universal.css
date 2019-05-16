@@ -86,26 +86,28 @@
 /* **************    DEFEKTY OBYVATEL       ************************************************************************** */
 /* ************************************************************************************************************ */
 
-#human-defects .human-label {
-    position: relative;
-    top: -55px;
-}
-
-#human-defects img {
-    max-height: 500px;
-}
-
 #human-defects .human-label img {
+    position: absolute;
     height: 25px;
 }
 
 #human-defects .human-label label {
-    position: relative;
-    top: -23px;
-    font-size: 22px;
+    position: absolute;
+    top: -10px;
+    left: 88px;
+    font-size: 13px;
     font-weight: bold;
 }
 
+#human-defects .human-label {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+#human-defects img{
+    max-height: 500px;
+}
 
 /* ************************************************************************************************************ */
 /* **************   KONEC DEFEKTY OBYVATEL       ************************************************************************** */
