@@ -1,21 +1,35 @@
-function movePoints(){
+/*
+ * Define on document ready
+ */
+$(document).ready(function () {
 
-    console.log("start with points moving");
+    /*
+     * Position of all points will be adjusted by actual picture size.
+     */
+    function movePoints() {
 
-    var imgHeight = $("#body-img").height();
-    var imgWidth = $("#body-img").width();
+        console.log("adjusting points");
 
-    // tohle cely kurva nefunguje
-    $(".human-label").each(function () {
+        var imgHeight = $("#body-img").height();
+        var imgWidth = $("#body-img").width();
 
-        // neumi to precist customize atribut ratiotop & ratioright - wtf nevim co za ma problem
-        var newTop = ($(this).attr("ratiotop") * imgHeight);
-        var newLeft = ($(this).attr("ratioright")* imgWidth);
+        $(".human-label").each(function () {
 
-        // nenastavi to styl - dela to hovno
-        $(this).css({"top" : newTop + "px"});
-        $(this).css({"left" : newLeft + "px"});
+            var newTop = $(this).attr("ratiotop") * imgHeight;
+            var newLeft = $(this).attr("ratioleft") * imgWidth;
 
-        console.log("top & left adjusted");
+            $(this).css({"top": newTop + "px"});
+            $(this).css({"left": newLeft + "px"});
+        });
+    }
+
+    movePoints();  // adjust points to actual image size
+
+    // define resize event that calls points adjusting to actual image size.
+    var timer_id;
+    $(window).resize(function() {
+        clearTimeout(timer_id);
+        timer_id = setTimeout(movePoints(), 50);
     });
-}
+    movePoints();
+});
