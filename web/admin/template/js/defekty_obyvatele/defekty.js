@@ -15,8 +15,11 @@ $(document).ready(function () {
 
         $(".human-label").each(function () {
 
-            var newTop = $(this).attr("ratiotop") * imgHeight;
-            var newLeft = $(this).attr("ratioleft") * imgWidth;
+            var adjusttop = -18;
+            var adjustleft = 10;
+
+            var newTop = $(this).attr("ratiotop") * imgHeight + adjusttop;
+            var newLeft = $(this).attr("ratioleft") * imgWidth + adjustleft;
 
             $(this).css({"top": newTop + "px"});
             $(this).css({"left": newLeft + "px"});
@@ -50,6 +53,7 @@ $(document).ready(function () {
         pointdiv.appendChild(image);
         pointdiv.appendChild(label);
         document.getElementById("body-div").appendChild(pointdiv);
+        movePoints();
     }
 
     movePoints();  // adjust points to actual image size
@@ -66,11 +70,8 @@ $(document).ready(function () {
         var offset_t = $(this).offset().top - $(window).scrollTop();
         var offset_l = $(this).offset().left - $(window).scrollLeft();
 
-        var adjusttop = -18;
-        var adjustleft = 10;
-
-        var left = Math.round( (e.clientX - offset_l) ) + adjustleft;
-        var top = Math.round( (e.clientY - offset_t) ) + adjusttop;
+        var left = Math.round( (e.clientX - offset_l) );
+        var top = Math.round( (e.clientY - offset_t) );
 
         addPoint(top, left);
     });
