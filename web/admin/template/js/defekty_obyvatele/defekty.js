@@ -1,4 +1,20 @@
 /*
+ * Returns top position on given image of given click event
+ */
+function getCurrentImageTop(img, e) {
+    var offset_t = $(img).offset().top - $(window).scrollTop();
+    return Math.round( (e.clientY - offset_t) );
+}
+
+/*
+ * Returns left position on given image of given click event
+ */
+function getCurrentImageLeft(img, e) {
+    var offset_l = $(img).offset().left - $(window).scrollLeft();
+    return Math.round( (e.clientX - offset_l) );
+}
+
+/*
  * Define on document ready
  */
 $(document).ready(function () {
@@ -25,6 +41,7 @@ $(document).ready(function () {
             $(this).css({"left": newLeft + "px"});
         });
     }
+    movePoints();  // adjust points to actual image size
 
     /*
      * Adds new point
@@ -54,9 +71,24 @@ $(document).ready(function () {
         pointdiv.appendChild(label);
         document.getElementById("body-div").appendChild(pointdiv);
         movePoints();
+        definePointOnClick(pointdiv);
     }
 
-    movePoints();  // adjust points to actual image size
+    /*
+     * Define on click event for point
+     */
+    function definePointOnClick(div){
+
+        div.onclick = function (e) {
+
+            var img = $("#body-img");
+
+            var top = getCurrentImageTop(img, e);
+            var left = getCurrentImageLeft(img, e);
+
+            addPoint(top, left);
+        };
+    }
 
     // define resize event that calls points adjusting to actual image size.
     var timer_id;
@@ -65,15 +97,18 @@ $(document).ready(function () {
         timer_id = setTimeout(movePoints(), 50);
     });
 
+    // define onclick event for human body image - enables to add points to this image
     $("#body-img").on("click", function(e) {
 
-        var offset_t = $(this).offset().top - $(window).scrollTop();
-        var offset_l = $(this).offset().left - $(window).scrollLeft();
-
-        var left = Math.round( (e.clientX - offset_l) );
-        var top = Math.round( (e.clientY - offset_t) );
+        var top = getCurrentImageTop(this, e);
+        var left = getCurrentImageLeft(this, e);
 
         addPoint(top, left);
+    });
+
+    // define for already added points onclick event (enables add new point that are over this point)
+    $(".human-label").each(function () {
+        definePointOnClick(this);
     });
 
     movePoints();
