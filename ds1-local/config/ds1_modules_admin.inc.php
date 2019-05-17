@@ -91,8 +91,10 @@
     $module["route_name"] = "human";
     $module["route_path"] = "/plugin/$module[name]";
     $module["route"] = array("controller_name" => "human_controller", "controller_action" => "indexAction");
+    $module["settings_file"] = "human_settings"; // bez koncovky a bez cesty
 
-    // pridat modul
+
+// pridat modul
     $modules_admin[] = $module;
 
 // **************   KONEC Modul sluzby         ****************************************

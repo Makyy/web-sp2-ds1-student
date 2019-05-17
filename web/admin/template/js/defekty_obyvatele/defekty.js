@@ -151,13 +151,21 @@ $(document).ready(function () {
         var ratioleft = $(point).attr("ratioleft");
         var adjustment = getPointAdjustment(ratioleft);
 
-        var newTop = ratiotop * imgHeight + adjustment[0] - Math.abs(offsetTop);
-        var newLeft = ratioleft * imgWidth + adjustment[1] - Math.abs(offsetLeft);
+        // var newTop = ratiotop * imgHeight + adjustment[0] - Math.abs(offsetTop);
+        // var newLeft = ratioleft * imgWidth + adjustment[1] - Math.abs(offsetLeft);
+        var newPosition = getNewPosition(ratiotop, ratioleft, imgHeight, imgWidth, adjustment, offsetTop, offsetLeft);
 
-        $(point).css({"top": newTop + "px"});
-        $(point).css({"left": newLeft + "px"});
+        $(point).css({"top": newPosition[0] + "px"});
+        $(point).css({"left": newPosition[1] + "px"});
 
-        checkPointVisibility(point, newTop - adjustment[0], newLeft - adjustment[1]);
+        checkPointVisibility(point, newPosition[0]- adjustment[0], newPosition[1] - adjustment[1]);
+    }
+
+    function getNewPosition(ratioTop, ratioLeft, imgHeight, imgWidth, adjustment, offsetTop, offsetLeft){
+        var newTop = ratioTop * imgHeight + adjustment[0] - Math.abs(offsetTop);
+        var newLeft = ratioLeft * imgWidth + adjustment[1] - Math.abs(offsetLeft);
+
+        return [newTop, newLeft];
     }
 
     movePoints();  // adjust points to actual image size
@@ -166,8 +174,6 @@ $(document).ready(function () {
      * Adds new point
      */
     function addPoint(top, left) {
-
-        /*
         var imgHeight = $("#body-img").height();
         var imgWidth = $("#body-img").width();
 
@@ -191,9 +197,20 @@ $(document).ready(function () {
         pointdiv.appendChild(image);
         pointdiv.appendChild(label);
         document.getElementById("body-div").appendChild(pointdiv);
-        movePoints();
+
+        //TODO: tyhle počty ukládat nějak normálně
+        var img = document.getElementById("body-img");
+        var stringPosition = img.style.backgroundPosition;
+        var imgTop = getHeight(stringPosition);
+        var imgLeft = getWidth(stringPosition);
+
+        var adjustment = getPointAdjustment(ratioleft);
+        var actualPosition = getNewPosition(ratiotop, ratioleft, 4010, 5940, adjustment, imgTop, imgLeft);
+
         definePointOnClick(pointdiv);
-        */
+
+        //X = left, Y = top
+        savePoint(actualPosition[0], actualPosition[1]);
     }
 
     /*
@@ -209,6 +226,26 @@ $(document).ready(function () {
 
             addPoint(top, left);
         };
+    }
+
+    /**
+     * Ukládání bodu do databáze
+     *
+     * @param x
+     * @param y
+     */
+    function savePoint(x, y){
+        $.ajax({
+            url: window.location.href + "&action=add_point",
+            data: {
+                "x": x,
+                "y": y
+            },
+            method: "POST",
+            success(result) {
+                window.location.replace(window.location.href);
+            }
+        });
     }
 
     // define resize event that calls points adjusting to actual image size.

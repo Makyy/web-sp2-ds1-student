@@ -12,9 +12,9 @@
 
                 <?php foreach ($defects as $defect) { ?>
 
-                    <div class="human-label <?php echo getPointDivClass($defect[1]) ?>" ratiotop="<?php echo getRatioTop($defect[0]) ?>" ratioleft="<?php echo getRatioLeft($defect[1]) ?>" style="top:<?php echo $defect[0]?>px; left:<?php echo $defect[1]?>px;">
-                        <img src="<?php echo getPointPicture($defect[1])?>" alt="defect point" >
-                        <label><?php echo $defect[2]?></label>
+                    <div class="human-label <?php echo getPointDivClass($defect["pos_y"]) ?>" ratiotop="<?php echo getRatioTop($defect["pos_x"]) ?>" ratioleft="<?php echo getRatioLeft($defect["pos_y"]) ?>" style="top:<?php echo $defect["pos_x"]?>px; left:<?php echo $defect["pos_y"]?>px;">
+                        <img src="<?php echo getPointPicture($defect["pos_y"])?>" alt="defect point" >
+                        <label><?php echo $defect["nazev"]?></label>
                     </div>
 
                 <?php } ?>

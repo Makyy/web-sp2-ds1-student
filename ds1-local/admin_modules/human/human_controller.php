@@ -9,7 +9,9 @@
 namespace ds1\admin_modules\human;
 
 
+use ds1\admin_modules\obyvatele\obyvatele;
 use ds1\core\ds1_base_controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class human_controller  extends ds1_base_controller
@@ -27,17 +29,16 @@ class human_controller  extends ds1_base_controller
         $human = new human();
         $human->SetPDOConnection($this->ds1->GetPDOConnection());
 
+        $obyvatele = new obyvatele();
+        $obyvatele->SetPDOConnection($this->ds1->GetPDOConnection());
+
+        //TODO: kontroly, že obyvatel existuje
+        //TODO: list obyvatel, kterým je možné přiřadit defekt
+        $obyvatelId = $this->loadRequestParam($request, 'obyvatel_id', 'all', "");
+
         // AKCE
         // action - typ akce
-        $action = $this->loadRequestParam($request,"action", "all", "obyvatele_list_all");
-        //echo "action: ".$action;
-
-        // vyhledavaci string nemam
-        $search_string = $this->loadRequestParam($request,"search_string", "all", "");
-
-        // nacist obyvatele, pokud mam
-        $obyvatel_id = $this->loadRequestParam($request,"obyvatel_id", "all", -1);
-
+        $action = $this->loadRequestParam($request,"action", "all", "");
 
         // univerzalni content params
         $content_params = array();
@@ -47,15 +48,7 @@ class human_controller  extends ds1_base_controller
         $content_params["route"] = $this->route;        // mam tam orders, je to automaticky z routingu
         $content_params["route_params"] = array();
         $content_params["controller"] = $this;
-
-
-        $defects [] = [2005, 800, "Something"];
-        $defects [] = [3000, 1200, "Hořííííííí"];
-        $defects [] = [1000, 400, "nové"];
-        $defects [] = [1000, 5000, "pravá strana"];
-
-        $content_params["defects"] = $defects;
-        $content = "";
+        $content_params["defects"] = $human->getDefectPointsByObyvatelId($obyvatelId);
 
         // defaultni vysledek akce
         $result_msg = "";
@@ -64,14 +57,32 @@ class human_controller  extends ds1_base_controller
                                         $content_params,
                                         true);
 
-        // vypsat hlavni template
-        $main_params = array();
-        $main_params["content"] = $content;
-        $main_params["result_msg"] = $result_msg;
-        $main_params["result_ok"] = $result_ok;
+        if ($action === "")
+        {
+            // vypsat hlavni template
+            $main_params = array();
+            $main_params["content"] = $content;
+            $main_params["result_msg"] = $result_msg;
+            $main_params["result_ok"] = $result_ok;
 
-        return $this->renderAdminTemplate($main_params);
-        //return new Response("Controller pro obyvatele.");
+            return $this->renderAdminTemplate($main_params);
+        }
+
+        // přidání bodu
+        if ($action === "add_point")
+        {
+            $array = array(
+                "obyvatel_id" => $obyvatelId,
+                "pos_x" => $request->get("x"),
+                "pos_y" => $request->get("y"),
+                'nazev' => "DEFEKT!"
+            );
+
+            // uložení bodíku
+            $human->addDefectPoint($array);
+
+            return new JsonResponse(null, 200);
+        }
     }
 
     }
