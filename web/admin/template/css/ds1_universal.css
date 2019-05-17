@@ -112,12 +112,13 @@
 
 #human-defects .human-label {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
 }
 
 #human-defects img {
-    /*max-height: 500px;*/
+    width: auto;
+    margin: 0;
 }
 
 

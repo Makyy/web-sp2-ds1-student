@@ -57,6 +57,57 @@ function isOnLeftSide(leftratio){
     }
 }
 
+function getWidth(size){
+    var n = size.indexOf("px");
+    return parseFloat(size.substring(0, n));
+}
+
+function getHeight(size){
+    var n = size.indexOf("px");
+    var sub = size.substring(n + 2, size.length - 1);
+    return parseFloat(sub);
+}
+
+function setPointVisibility(point, isvisible){
+
+    var visibility = "visible";
+    if (isvisible == false){
+        visibility = "hidden";
+    }
+
+    $(point).css({"visibility" : visibility});
+}
+
+function checkPointVisibility(point, top, left){
+
+    var img = $("#body-img");
+
+    var imgtop = img.offset().top;
+    var imgleft = img.offset().left;
+    var imgheight = img.height() + imgtop;
+    var imgwidth = img.width() + imgleft;
+
+
+    if (top < 0){
+        setPointVisibility(point, false);
+        return;
+    }
+    if (left < 0){
+        setPointVisibility(point, false);
+        return;
+    }
+    if (top > imgheight){
+        setPointVisibility(point, false);
+        return;
+    }
+    if (left > imgwidth){
+        setPointVisibility(point, false);
+        return;
+    }
+    setPointVisibility(point, true);
+
+}
+
 /*
  * Define on document ready
  */
@@ -79,22 +130,36 @@ $(document).ready(function () {
 
         console.log("adjusting points");
 
-        var imgHeight = $("#body-img").height();
-        var imgWidth = $("#body-img").width();
+        var img = document.getElementById("body-img");
+        var stringSize = img.style.backgroundSize;
+        var stringPosition = img.style.backgroundPosition;
+
+        var imgHeight = getHeight(stringSize);
+        var imgWidth = getWidth(stringSize);
+
+        var imgTop = getHeight(stringPosition);
+        var imgLeft = getWidth(stringPosition);
 
         $(".human-label").each(function () {
-
-            var ratiotop = $(this).attr("ratiotop");
-            var ratioleft = $(this).attr("ratioleft");
-            var adjustment = getPointAdjustment(ratioleft);
-
-            var newTop = ratiotop * imgHeight + adjustment[0];
-            var newLeft = ratioleft * imgWidth + adjustment[1];
-
-            $(this).css({"top": newTop + "px"});
-            $(this).css({"left": newLeft + "px"});
+            movePoint(this, imgHeight, imgWidth, imgTop, imgLeft);
         });
     }
+
+    function movePoint(point, imgHeight, imgWidth, offsetTop, offsetLeft) {
+
+        var ratiotop = $(point).attr("ratiotop");
+        var ratioleft = $(point).attr("ratioleft");
+        var adjustment = getPointAdjustment(ratioleft);
+
+        var newTop = ratiotop * imgHeight + adjustment[0] - Math.abs(offsetTop);
+        var newLeft = ratioleft * imgWidth + adjustment[1] - Math.abs(offsetLeft);
+
+        $(point).css({"top": newTop + "px"});
+        $(point).css({"left": newLeft + "px"});
+
+        checkPointVisibility(point, newTop - adjustment[0], newLeft - adjustment[1]);
+    }
+
     movePoints();  // adjust points to actual image size
 
     /*
@@ -102,6 +167,7 @@ $(document).ready(function () {
      */
     function addPoint(top, left) {
 
+        /*
         var imgHeight = $("#body-img").height();
         var imgWidth = $("#body-img").width();
 
@@ -127,6 +193,7 @@ $(document).ready(function () {
         document.getElementById("body-div").appendChild(pointdiv);
         movePoints();
         definePointOnClick(pointdiv);
+        */
     }
 
     /*
@@ -137,7 +204,6 @@ $(document).ready(function () {
         div.onclick = function (e) {
 
             var img = $("#body-img");
-
             var top = getCurrentImageTop(img, e);
             var left = getCurrentImageLeft(img, e);
 
@@ -146,11 +212,7 @@ $(document).ready(function () {
     }
 
     // define resize event that calls points adjusting to actual image size.
-    var timer_id;
-    $(window).resize(function() {
-        clearTimeout(timer_id);
-        timer_id = setTimeout(movePoints(), 50);
-    });
+    $("#body-img").resize(movePoints);
 
     // define onclick event for human body image - enables to add points to this image
     $("#body-img").on("click", function(e) {
@@ -167,4 +229,14 @@ $(document).ready(function () {
     });
 
     movePoints();
+    wheelzoom(document.querySelector('img.zoom'));
+
+    var img = document.getElementById("body-img");
+    img.addEventListener('wheel', function(){
+        movePoints();
+    });
+
+    img.addEventListener('mousemove',  function(){
+        movePoints();
+    });
 });
