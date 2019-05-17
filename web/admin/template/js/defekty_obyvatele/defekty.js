@@ -2,6 +2,7 @@
  * Returns top position on given image of given click event
  */
 function getCurrentImageTop(img, e) {
+
     var offset_t = $(img).offset().top - $(window).scrollTop();
     return Math.round( (e.clientY - offset_t) );
 }
@@ -10,8 +11,50 @@ function getCurrentImageTop(img, e) {
  * Returns left position on given image of given click event
  */
 function getCurrentImageLeft(img, e) {
+
     var offset_l = $(img).offset().left - $(window).scrollLeft();
     return Math.round( (e.clientX - offset_l) );
+}
+
+/*
+ * Returns class name based on point position
+ */
+function getPointDivClass(isleft){
+
+    if (isleft == true){
+        return "human-label right-side";
+    }
+    else {
+        return "human-label left-side";
+    }
+}
+
+/*
+ * Returns path to point picture based on its position
+ */
+function getPointPicturePath(isleft){
+
+    if (isleft == true){
+        return "/admin/template/img/defekty_obyvatel/path-top-left.png";
+    }
+    else {
+        return "/admin/template/img/defekty_obyvatel/path-top-right.png";
+    }
+}
+
+/*
+ * Finds out left or right side based on given horizontal
+ * ratio of point to human body picture
+ */
+function isOnLeftSide(leftratio){
+
+    var border = 0.5;
+    if (leftratio > border){
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 /*
@@ -19,6 +62,16 @@ function getCurrentImageLeft(img, e) {
  */
 $(document).ready(function () {
 
+    function getPointAdjustment(leftratio){
+
+        var isleft = isOnLeftSide(leftratio);
+        if (isleft ==  true){
+            return [-18, -60];
+        }
+        else {
+            return [-18, 10];
+        }
+    }
     /*
      * Position of all points will be adjusted by actual picture size.
      */
@@ -31,11 +84,12 @@ $(document).ready(function () {
 
         $(".human-label").each(function () {
 
-            var adjusttop = -18;
-            var adjustleft = 10;
+            var ratiotop = $(this).attr("ratiotop");
+            var ratioleft = $(this).attr("ratioleft");
+            var adjustment = getPointAdjustment(ratioleft);
 
-            var newTop = $(this).attr("ratiotop") * imgHeight + adjusttop;
-            var newLeft = $(this).attr("ratioleft") * imgWidth + adjustleft;
+            var newTop = ratiotop * imgHeight + adjustment[0];
+            var newLeft = ratioleft * imgWidth + adjustment[1];
 
             $(this).css({"top": newTop + "px"});
             $(this).css({"left": newLeft + "px"});
@@ -52,10 +106,11 @@ $(document).ready(function () {
         var imgWidth = $("#body-img").width();
 
         var ratiotop = top / imgHeight;
-        var ratioleft = left / imgWidth;;
+        var ratioleft = left / imgWidth;
+        var isleft = isOnLeftSide(ratioleft);
 
         var image = document.createElement("img");
-        image.setAttribute("src", "/admin/template/img/defekty_obyvatel/path-top-right.png");
+        image.setAttribute("src", getPointPicturePath(isleft));
         image.setAttribute("alt", "defect point");
 
         var label = document.createElement("label");
@@ -63,7 +118,7 @@ $(document).ready(function () {
 
         var pointdiv = document.createElement("div");
         pointdiv.style.cssText = "top:" + top + "px; left:" + left + "px;";
-        pointdiv.setAttribute("class", "human-label");
+        pointdiv.setAttribute("class", getPointDivClass(isleft));
         pointdiv.setAttribute("ratiotop", ratiotop);
         pointdiv.setAttribute("ratioleft", ratioleft);
 
