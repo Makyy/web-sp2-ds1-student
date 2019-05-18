@@ -254,8 +254,10 @@ $(document).ready(function () {
      */
     function addDefectInput(id) {
         let form = $("form#defect-form");
+        let inputs = $("form#defect-form input[type=text]");
+        let len = inputs.length + 1;
 
-        form.find("input:submit").before('<div class="input-group mt-2"><label for="' + id + '">' + id + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"></div>');
+        form.find("input:submit").before('<div class="input-group mt-2"><label for="' + id + '">' + len + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"></div>');
     }
 
     // define resize event that calls points adjusting to actual image size.
