@@ -20,6 +20,24 @@
                 <?php } ?>
 
             </div>
+
+            <div class="col-md-2">
+                <form class="form" id="defect-form" method="post" action="<?php echo $form_action ?>">
+                    <?php $i = 1; foreach ($defects as $defect) { ?>
+                        <div class="input-group mt-2">
+                            <label for="<?php echo $defect["id"] ?>"><?php echo $i . "."; $i++; ?></label>
+                            <input type="text" class="form-control"
+                                   id="<?php echo $defect["id"] ?>"
+                                   value="<?php echo $defect["nazev"] ?>"
+                                   name="def[<?php echo $defect["id"] ?>]">
+                        </div>
+                    <?php } ?>
+
+                    <?php if(count($defects)>0)
+                        echo '<input type="submit" class="btn btn-success form-control mt-2" value="Uložit">';
+                    ?>
+                </form>
+            </div>
         </div>
 
         <br/>

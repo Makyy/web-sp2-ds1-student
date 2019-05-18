@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class human_controller  extends ds1_base_controller
 {
+    const PLUGIN_URL = "plugin/human";
+
     public function indexAction(Request $request, $page = "")
     {
         // zavolat metodu rodice, ktera provede obecne hlavni kroky a nacte parametry
@@ -44,6 +46,7 @@ class human_controller  extends ds1_base_controller
         $content_params = array();
         $content_params["base_url"] = $this->webGetBaseUrl();
         $content_params["base_url_link"] = $this->webGetBaseUrlLink();
+        $content_params["form_action"] = $this->webGetBaseUrlLink() . self::PLUGIN_URL . "?obyvatel_id=" . $obyvatelId . "&action=save_points";
         $content_params["page_number"] = $this->page_number;
         $content_params["route"] = $this->route;        // mam tam orders, je to automaticky z routingu
         $content_params["route_params"] = array();
@@ -57,31 +60,39 @@ class human_controller  extends ds1_base_controller
                                         $content_params,
                                         true);
 
+        // vypsat hlavni template
+        $main_params = array();
+        $main_params["content"] = $content;
+        $main_params["result_msg"] = $result_msg;
+        $main_params["result_ok"] = $result_ok;
+
         if ($action === "")
         {
-            // vypsat hlavni template
-            $main_params = array();
-            $main_params["content"] = $content;
-            $main_params["result_msg"] = $result_msg;
-            $main_params["result_ok"] = $result_ok;
-
             return $this->renderAdminTemplate($main_params);
         }
 
         // přidání bodu
         if ($action === "add_point")
         {
-            $array = array(
-                "obyvatel_id" => $obyvatelId,
-                "pos_x" => $request->get("x"),
-                "pos_y" => $request->get("y"),
-                'nazev' => "DEFEKT!"
-            );
+            $x = $this->loadRequestParam($request, "x", "post");
+            $y = $this->loadRequestParam($request, "y", "post");
 
-            // uložení bodíku
-            $human->addDefectPoint($array);
+            $result = $human->addDefectPoint($x, $y, $obyvatelId);
 
-            return new JsonResponse(null, 200);
+            // vrací ID vloženého záznamu
+            return new JsonResponse($result, 200);
+        }
+
+        // uložení názvů defektů
+        if ($action === "save_points")
+        {
+            $formValues = $this->loadRequestParam($request, "def", "post");
+            foreach ($formValues as $key => $value)
+            {
+                $human->updateDefectName($key, $value);
+            }
+
+            $this->redirectUser($this->webGetBaseUrlLink() . self::PLUGIN_URL . "?obyvatel_id=" . $obyvatelId);
         }
     }
 

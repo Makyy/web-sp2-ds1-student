@@ -241,11 +241,21 @@ $(document).ready(function () {
                 "x": x,
                 "y": y
             },
-            method: "POST",
-            success(result) {
-                window.location.replace(window.location.href);
-            }
+            method: "POST"
+        }).done(function (result) {
+            addDefectInput(result);
         });
+    }
+
+    /**
+     * Přidání vstupního prvku pro editaci
+     *
+     * @param id : ID defektu v databázi
+     */
+    function addDefectInput(id) {
+        let form = $("form#defect-form");
+
+        form.find("input:submit").before('<div class="input-group mt-2"><label for="' + id + '">' + id + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"></div>');
     }
 
     // define resize event that calls points adjusting to actual image size.
