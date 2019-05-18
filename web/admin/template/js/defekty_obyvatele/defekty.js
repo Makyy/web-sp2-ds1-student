@@ -168,8 +168,6 @@ $(document).ready(function () {
         return [newTop, newLeft];
     }
 
-    movePoints();  // adjust points to actual image size
-
     /*
      * Adds new point
      */
@@ -259,6 +257,10 @@ $(document).ready(function () {
 
         form.find("input:submit").before('<div class="input-group mt-2"><label for="' + id + '">' + len + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"></div>');
     }
+
+    $(document).ready(function () {
+        movePoints();  // adjust points to actual image size
+    });
 
     // define resize event that calls points adjusting to actual image size.
     $("#body-img").resize(movePoints);
