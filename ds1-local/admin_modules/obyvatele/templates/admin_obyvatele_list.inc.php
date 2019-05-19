@@ -162,6 +162,8 @@
                                   <a href=\"$url_detail\" class='btn btn-primary btn-sm'><i class=\"icon-layers\"></i></a>
                                   &nbsp;&nbsp;
                                   <a href=\"$url_update_prepare\" class='btn btn-primary btn-sm'><i class=\"icon-pencil\"></i></a>
+                                  &nbsp;&nbsp;
+                                  <a href=\"$url_add_defect$obyvatel[id]\" class='btn btn-primary btn-sm'><i class=\"icon-plus\"></i></a>
                               </td>";
 
                     echo "</tr>";

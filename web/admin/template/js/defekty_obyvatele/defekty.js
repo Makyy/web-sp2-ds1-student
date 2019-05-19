@@ -192,10 +192,6 @@ $(document).ready(function () {
         pointdiv.setAttribute("ratiotop", ratiotop);
         pointdiv.setAttribute("ratioleft", ratioleft);
 
-        pointdiv.appendChild(image);
-        pointdiv.appendChild(label);
-        document.getElementById("body-div").appendChild(pointdiv);
-
         //TODO: tyhle počty ukládat nějak normálně
         var img = document.getElementById("body-img");
         var stringPosition = img.style.backgroundPosition;
@@ -207,8 +203,14 @@ $(document).ready(function () {
 
         definePointOnClick(pointdiv);
 
-        //X = left, Y = top
-        savePoint(actualPosition[0], actualPosition[1]);
+        let elements = {
+            pointdiv: pointdiv,
+            image: image,
+            label: label,
+            actualPosition: actualPosition
+        };
+
+        savePoint(elements);
     }
 
     /*
@@ -229,19 +231,19 @@ $(document).ready(function () {
     /**
      * Ukládání bodu do databáze
      *
-     * @param x
-     * @param y
+     * @param elements
      */
-    function savePoint(x, y){
+    function savePoint(elements){
         $.ajax({
             url: window.location.href + "&action=add_point",
             data: {
-                "x": x,
-                "y": y
+                "x": elements.actualPosition[0],
+                "y": elements.actualPosition[1]
             },
             method: "POST"
         }).done(function (result) {
             addDefectInput(result);
+            addDefectImage(elements, result);
         });
     }
 
@@ -251,15 +253,106 @@ $(document).ready(function () {
      * @param id : ID defektu v databázi
      */
     function addDefectInput(id) {
+        let submitButton = $("form#defect-form input[type=submit]");
+        if (submitButton.is(":hidden")) {
+            submitButton.show();
+        }
+
         let form = $("form#defect-form");
         let inputs = $("form#defect-form input[type=text]");
         let len = inputs.length + 1;
 
-        form.find("input:submit").before('<div class="input-group mt-2"><label for="' + id + '">' + len + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"></div>');
+        form.find("input:submit").before('<div class="input-group mt-2" id="defect-group-'+id+'"><label for="' + id + '">' + len + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"><a class="btn btn-danger btn-sm ml-1" style="color: #fafafa" id="delete-'+ id +'"><i class="fa fa-fw fa-times"></i></a></div>');
+
+        registerRemoveOnclickHandler(id);
+    }
+
+    /**
+     * Přidání bodu do obrázku
+     *
+     * @param elements
+     * @param id
+     */
+    function addDefectImage(elements, id) {
+        var divgroup = document.createElement("div");
+        divgroup.setAttribute("id", "defect-image-group-" + id);
+
+        divgroup.appendChild(elements.pointdiv);
+        elements.pointdiv.appendChild(elements.image);
+        elements.pointdiv.appendChild(elements.label);
+        document.getElementById("body-div").appendChild(divgroup);
+
+        movePoints();
+    }
+
+    /**
+     * Odstranění defektu z DB
+     *
+     * @param id
+     */
+    function removeDefect(id) {
+        $.ajax({
+            url: window.location.href + "&action=remove_point",
+            data: {
+                "defect_id": id
+            },
+            method: "POST"
+        }).done(function (data) {
+            if (data) {
+                removeDefectInput(id);
+            } else {
+                alert("Nepodařilo se odstranit defekt.");
+            }
+        });
+    }
+
+    /**
+     * Odstranení vstupního prvku a bodu z obrázku po odstranění z DB
+     *
+     * @param id
+     */
+    function removeDefectInput(id){
+        $("form#defect-form #defect-group-" + id).remove();
+        $("#defect-image-group-" + id).remove();
+
+        let inputs = $("form#defect-form input[type=text]");
+        if (inputs.length === 0) {
+            $("form#defect-form input[type=submit]").hide();
+        }
+    }
+
+    /**
+     * Zaregistrování onclick handleru pro tlačítko na odstranění defektu
+     *
+     * @param id : int|null pokud je vyplněno nastaví se handler přímo pro dané tlačítko, pokud ne, nastaví se pro
+     *                      všechny mazací tlačítka ve formuláři
+     */
+    function registerRemoveOnclickHandler(id) {
+        if (id === null) {
+            $("form#defect-form a").each(function () {
+                let idStr = this.getAttribute("id");
+                let id = idStr.replace("delete-", "");
+
+                this.onclick = function () {
+                    if (confirm("Opravdu chcete odstranit defekt?")) {
+                        removeDefect(id);
+                    }
+                };
+            })
+        } else {
+            $("form#defect-form #delete-" + id).click(function () {
+                if (confirm("Opravdu chcete odstranit defekt?")) {
+                    removeDefect(id);
+                }
+            });
+        }
     }
 
     $(document).ready(function () {
         movePoints();  // adjust points to actual image size
+
+        // zaregistrování onlick eventu pro odstranění defektu
+        registerRemoveOnclickHandler(null);
     });
 
     // define resize event that calls points adjusting to actual image size.
@@ -279,15 +372,10 @@ $(document).ready(function () {
         definePointOnClick(this);
     });
 
-    movePoints();
     wheelzoom(document.querySelector('img.zoom'));
 
     var img = document.getElementById("body-img");
     img.addEventListener('wheel', function(){
-        movePoints();
-    });
-
-    img.addEventListener('mousemove',  function(){
         movePoints();
     });
 });

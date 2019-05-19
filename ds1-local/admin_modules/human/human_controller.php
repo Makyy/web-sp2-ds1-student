@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class human_controller  extends ds1_base_controller
 {
-    const PLUGIN_URL = "plugin/human";
-
     public function indexAction(Request $request, $page = "")
     {
         // zavolat metodu rodice, ktera provede obecne hlavni kroky a nacte parametry
@@ -34,9 +32,7 @@ class human_controller  extends ds1_base_controller
         $obyvatele = new obyvatele();
         $obyvatele->SetPDOConnection($this->ds1->GetPDOConnection());
 
-        //TODO: kontroly, že obyvatel existuje
-        //TODO: list obyvatel, kterým je možné přiřadit defekt
-        $obyvatelId = $this->loadRequestParam($request, 'obyvatel_id', 'all', "");
+        $obyvatelId = $this->loadRequestParam($request, 'obyvatel_id', 'all', null);
 
         // AKCE
         // action - typ akce
@@ -46,7 +42,7 @@ class human_controller  extends ds1_base_controller
         $content_params = array();
         $content_params["base_url"] = $this->webGetBaseUrl();
         $content_params["base_url_link"] = $this->webGetBaseUrlLink();
-        $content_params["form_action"] = $this->webGetBaseUrlLink() . self::PLUGIN_URL . "?obyvatel_id=" . $obyvatelId . "&action=save_points";
+        $content_params["form_action"] = $this->makeUrlByRoute($this->route, array("obyvatel_id" => $obyvatelId, "action" => "save_points"));
         $content_params["page_number"] = $this->page_number;
         $content_params["route"] = $this->route;        // mam tam orders, je to automaticky z routingu
         $content_params["route_params"] = array();
@@ -79,7 +75,8 @@ class human_controller  extends ds1_base_controller
 
             $result = $human->addDefectPoint($x, $y, $obyvatelId);
 
-            // vrací ID vloženého záznamu
+            $result = $result > 0 ? $result : false;
+
             return new JsonResponse($result, 200);
         }
 
@@ -92,7 +89,23 @@ class human_controller  extends ds1_base_controller
                 $human->updateDefectName($key, $value);
             }
 
-            $this->redirectUser($this->webGetBaseUrlLink() . self::PLUGIN_URL . "?obyvatel_id=" . $obyvatelId);
+            $this->redirectUser($this->makeUrlByRoute($this->route, array("obyvatel_id" => $obyvatelId)));
+        }
+
+        // odstranění defektu z DB
+        if ($action === "remove_point")
+        {
+            $defectId = $this->loadRequestParam($request, "defect_id", "post");
+
+            // ID defektu nebylo vyplněno
+            if (empty($defectId))
+            {
+                return new JsonResponse(false, 200);
+            }
+
+            $result = $human->deleteDefectById($defectId);
+
+            return new JsonResponse($result, 200);
         }
     }
 

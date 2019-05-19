@@ -11,12 +11,15 @@
                 <img class="zoom" height="500" id="body-img" originwidth="1645" originheight="4010" src="/admin/template/img/defekty_obyvatel/human-body.jpg" alt="human body" class="img-fluid">
 
                 <?php foreach ($defects as $defect) { ?>
-
-                    <div class="human-label <?php echo getPointDivClass($defect["pos_y"]) ?>" ratiotop="<?php echo getRatioTop($defect["pos_x"]) ?>" ratioleft="<?php echo getRatioLeft($defect["pos_y"]) ?>" style="top:<?php echo $defect["pos_x"]?>px; left:<?php echo $defect["pos_y"]?>px;">
-                        <img src="<?php echo getPointPicture($defect["pos_y"])?>" alt="defect point" >
-                        <label><?php echo $defect["nazev"]?></label>
+                    <div id="defect-image-group-<?php echo $defect["id"] ?>">
+                        <div class="human-label <?php echo getPointDivClass($defect["pos_y"]) ?>"
+                             ratiotop="<?php echo getRatioTop($defect["pos_x"]) ?>"
+                             ratioleft="<?php echo getRatioLeft($defect["pos_y"]) ?>"
+                             style="top:<?php echo $defect["pos_x"] ?>px; left:<?php echo $defect["pos_y"] ?>px;">
+                            <img src="<?php echo getPointPicture($defect["pos_y"]) ?>" alt="defect point">
+                            <label><?php echo $defect["nazev"] ?></label>
+                        </div>
                     </div>
-
                 <?php } ?>
 
             </div>
@@ -24,12 +27,13 @@
             <div class="col-md-2">
                 <form class="form" id="defect-form" method="post" action="<?php echo $form_action ?>">
                     <?php $i = 1; foreach ($defects as $defect) { ?>
-                        <div class="input-group mt-2">
+                        <div class="input-group mt-2" id="defect-group-<?php echo $defect["id"]?>">
                             <label for="<?php echo $defect["id"] ?>"><?php echo $i . "."; $i++; ?></label>
                             <input type="text" class="form-control"
                                    id="<?php echo $defect["id"] ?>"
                                    value="<?php echo $defect["nazev"] ?>"
                                    name="def[<?php echo $defect["id"] ?>]">
+                            <a class="btn btn-danger btn-sm ml-1" style="color: #fafafa" id="delete-<?php echo $defect["id"]?>"><i class="fa fa-fw fa-times"></i></a>
                         </div>
                     <?php } ?>
 
