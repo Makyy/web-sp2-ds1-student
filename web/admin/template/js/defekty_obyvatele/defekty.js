@@ -147,8 +147,6 @@ $(document).ready(function () {
         var ratioleft = $(point).attr("ratioleft");
         var adjustment = getPointAdjustment(ratioleft);
 
-        // var newTop = ratiotop * imgHeight + adjustment[0] - Math.abs(offsetTop);
-        // var newLeft = ratioleft * imgWidth + adjustment[1] - Math.abs(offsetLeft);
         var newPosition = getNewPosition(ratiotop, ratioleft, imgHeight, imgWidth, adjustment, offsetTop, offsetLeft);
 
         $(point).css({"top": newPosition[0] + "px"});
