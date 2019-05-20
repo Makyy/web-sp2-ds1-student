@@ -7,7 +7,6 @@
     <div class="container-fluid" id="human-defects">
         <div class="row">
             <div id="body-div" class="col-lg-9 col-md-12 col-sm-12" style="position: relative">
-                <?php if(isset($name)) echo "<h4>$name</h4>" ?>
 
                 <img class="default-cursor zoom" canaddpoint="false" height="500" id="body-img" originwidth="1645" originheight="4010" src="/admin/template/img/defekty_obyvatel/human-body.jpg" alt="human body" class="img-fluid">
 
@@ -26,6 +25,7 @@
             </div>
 
             <div class="col-lg-3 col-md-4 col-sm-12">
+                <?php if(isset($name)) echo "<h4>$name</h4>" ?>
                 <form class="form" id="defect-form" method="post" action="<?php echo $form_action ?>">
                     <?php $i = 1; foreach ($defects as $defect) { ?>
                         <div class="input-group mt-2" id="defect-group-<?php echo $defect["id"]?>">
