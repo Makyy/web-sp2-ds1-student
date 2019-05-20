@@ -179,7 +179,7 @@
 #human-defects .human-label label:hover{
     color: #5fb2da !important;
     font-size:16px;
-    top: -10px;
+    cursor: default;
 }
 
 
