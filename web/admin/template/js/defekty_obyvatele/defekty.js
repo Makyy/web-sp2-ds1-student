@@ -81,12 +81,8 @@ function setPointVisibility(point, isvisible){
 function checkPointVisibility(point, top, left){
 
     var img = $("#body-img");
-
-    var imgtop = img.offset().top;
-    var imgleft = img.offset().left;
-    var imgheight = img.height() + imgtop;
-    var imgwidth = img.width() + imgleft;
-
+    var imgheight = img.height();
+    var imgwidth = img.width();
 
     if (top < 0){
         setPointVisibility(point, false);
