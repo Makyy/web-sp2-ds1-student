@@ -86,6 +86,41 @@
 /* **************    DEFEKTY OBYVATEL       ************************************************************************** */
 /* ************************************************************************************************************ */
 
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes fontsizeanimation  {
+    0%   {font-size:0px;}
+    70%  {font-size:20px;}
+    100% {font-size:13px;}
+}
+
+@keyframes fontsizeanimation {
+    0%   {font-size:0px;}
+    70%  {font-size:20px;}
+    100% {font-size:13px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes imganimation  {
+    0%   {height:0px;}
+    70%  {height:27px;}
+    100% {height:25px;}
+}
+
+@keyframes imganimation {
+    0%   {height:0px;}
+    70%  {height:27px;}
+    100% {height:25px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes font-size-animation  {
+    100% {font-size:16px;}
+}
+
+@keyframes font-size-animation {
+    100% {font-size:16px;}
+}
+
 .left-side label {
     top: -10px !important;
     left: 88px !important;
@@ -101,13 +136,25 @@
 #human-defects .human-label img {
     position: absolute;
     height: 25px;
+    -webkit-animation-name: imganimation; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    -webkit-animation-iteration-count: 1; /* Safari 4.0 - 8.0 */
+    animation-name: imganimation;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
 }
 
 #human-defects .human-label label {
     position: absolute;
-    font-size: 13px;
     font-weight: bold;
     width: 100px;
+    -webkit-animation-name: fontsizeanimation; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    -webkit-animation-iteration-count: 1; /* Safari 4.0 - 8.0 */
+    animation-name: fontsizeanimation;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    font-size: 13px;
 }
 
 #human-defects .human-label {
@@ -119,6 +166,20 @@
 #human-defects img {
     width: auto;
     margin: 0;
+}
+
+.cross-cursor {
+    cursor: crosshair;
+}
+
+.default-cursor {
+    cursor: default;
+}
+
+#human-defects .human-label label:hover{
+    color: #5fb2da !important;
+    font-size:16px;
+    cursor: default;
 }
 
 

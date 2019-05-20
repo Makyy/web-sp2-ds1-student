@@ -8,6 +8,8 @@ window.wheelzoom = (function(){
         zoom: 0.10,
         maxZoom: false,
         initialZoom: 1,
+        zoomToX: -1,
+        zoomToY: -1
     };
 
     var main = function(img, options){
@@ -22,6 +24,16 @@ window.wheelzoom = (function(){
         var bgPosY;
         var previousEvent;
         var cachedDataUrl;
+
+        function setCoordinatesForZooming(x, y){
+            settings.zoomToX = x;
+            settings.zoomToY = y;
+        }
+
+        function setDefaultCoordinatesForZooming(){
+            console.log("default");
+            setCoordinatesForZooming(-1, -1);
+        }
 
         function setSrcToBackground(img) {
             img.style.backgroundRepeat = 'no-repeat';
@@ -106,6 +118,49 @@ window.wheelzoom = (function(){
             }
         }
 
+        function onzoomtocoordinates(e) {
+
+            if (settings.zoomToY == -1 && settings.zoomToX == -1) return;
+
+            var offsetX = 0;
+            var offsetY = 0;
+
+            console.log("OFFSET: " + offsetX + "-" + offsetY);
+            console.log("POS: " + bgPosX + "-" + bgPosY);
+            console.log("BG SIZE: W" + bgWidth + "-H" + bgHeight);
+
+
+            // Record the offset between the bg edge and cursor:
+            var bgCursorX = offsetX;// bgPosX;
+            var bgCursorY = offsetY;//bgPosY;
+
+            // Use the previous offset to get the percent offset between the bg edge and cursor:
+            var bgRatioX = bgCursorX/bgWidth;
+            var bgRatioY = bgCursorY/bgHeight;
+
+            // Update the bg size:
+            bgWidth += bgWidth*settings.zoom;
+            bgHeight += bgHeight*settings.zoom;
+
+            if (settings.maxZoom) {
+                bgWidth = Math.min(width*settings.maxZoom, bgWidth);
+                bgHeight = Math.min(height*settings.maxZoom, bgHeight);
+            }
+
+            // Take the percent offset and apply it to the new size:
+            bgPosX = offsetX - (bgWidth * bgRatioX);
+            bgPosY = offsetY - (bgHeight * bgRatioY);
+
+            console.log("W" + width + "-H" + height);
+
+            // Prevent zooming out beyond the starting size
+            if (bgWidth <= width || bgHeight <= height) {
+                reset();
+            } else {
+                updateBgStyle();
+            }
+        }
+
         function drag(e) {
             e.preventDefault();
             bgPosX += (e.pageX - previousEvent.pageX);
@@ -148,6 +203,10 @@ window.wheelzoom = (function(){
             img.addEventListener('wheelzoom.reset', reset);
 
             img.addEventListener('wheel', onwheel);
+
+            img.addEventListener('zoomto', onzoomtocoordinates);
+            img.addEventListener('wheelzoom.defaultcoordinates', setDefaultCoordinatesForZooming);
+
             img.addEventListener('mousedown', draggable);
         }
 
@@ -159,6 +218,9 @@ window.wheelzoom = (function(){
             img.removeEventListener('mousemove', drag);
             img.removeEventListener('mousedown', draggable);
             img.removeEventListener('wheel', onwheel);
+
+            img.removeEventListener('zoomto', onzoomtocoordinates);
+            img.removeEventListener('wheelzoom.defaultcoordinates', setDefaultCoordinatesForZooming);
 
             img.style.backgroundImage = originalProperties.backgroundImage;
             img.style.backgroundRepeat = originalProperties.backgroundRepeat;

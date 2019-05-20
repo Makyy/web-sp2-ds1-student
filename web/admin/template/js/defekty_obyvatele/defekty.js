@@ -213,6 +213,34 @@ $(document).ready(function () {
         savePoint(elements);
     }
 
+    /**
+     * Zooms to given coordinates.
+     * @param x
+     * @param y
+     */
+    function zoomToCoordinations(x, y) {
+
+        // set x, y coordinates
+        wheelzoom(document.querySelector('img.zoom'), {zoomToX: x, zoomToY: y});
+
+        // triggers zooming
+        document.querySelector('img.zoom').dispatchEvent(new CustomEvent('zoomto'));
+
+        // set defaults for next zooming
+        document.querySelector('img.zoom').dispatchEvent(new CustomEvent('wheelzoom.defaultcoordinates'));
+    }
+
+    function SetAbilityToAddPoints(canAdd){
+        if (canAdd == true){
+            $("#body-img").attr("canaddpoint", "true");
+            $("#body-img").attr("class", "cross-cursor zoom");
+        }
+        else {
+            $("#body-img").attr("canaddpoint", "false");
+            $("#body-img").attr("class", "default-cursor zoom");
+        }
+    }
+
     /*
      * Define on click event for point
      */
@@ -221,6 +249,12 @@ $(document).ready(function () {
         div.onclick = function (e) {
 
             var img = $("#body-img");
+            var canAddPoint = img.attr("canaddpoint");
+
+            if (canAddPoint === "false") return;
+
+            console.log("can edit");
+
             var top = getCurrentImageTop(img, e);
             var left = getCurrentImageLeft(img, e);
 
@@ -242,8 +276,9 @@ $(document).ready(function () {
             },
             method: "POST"
         }).done(function (result) {
-            addDefectInput(result);
+            addDefectInput(result, elements.actualPosition[0], elements.actualPosition[1]);
             addDefectImage(elements, result);
+            SetAbilityToAddPoints(false);
         });
     }
 
@@ -252,7 +287,7 @@ $(document).ready(function () {
      *
      * @param id : ID defektu v databázi
      */
-    function addDefectInput(id) {
+    function addDefectInput(id, x, y) {
         let submitButton = $("form#defect-form input[type=submit]");
         if (submitButton.is(":hidden")) {
             submitButton.show();
@@ -262,7 +297,7 @@ $(document).ready(function () {
         let inputs = $("form#defect-form input[type=text]");
         let len = inputs.length + 1;
 
-        form.find("input:submit").before('<div class="input-group mt-2" id="defect-group-'+id+'"><label for="' + id + '">' + len + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"><a class="btn btn-danger btn-sm ml-1" style="color: #fafafa" id="delete-'+ id +'"><i class="fa fa-fw fa-times"></i></a></div>');
+        form.find("input:submit").before('<div class="input-group mt-2" id="defect-group-'+id+'"><label style="align-content: center; width: 20px; text-align: center; padding-top: 6px;"  for="' + id + '">' + len + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"><a class="btn btn-danger btn-sm ml-1" style="padding-top:6px;color: #fafafa" id="delete-'+ id +'"><i class="fa fa-fw fa-times"></i></a></div>');
 
         registerRemoveOnclickHandler(id);
     }
@@ -330,7 +365,12 @@ $(document).ready(function () {
     function registerRemoveOnclickHandler(id) {
         if (id === null) {
             $("form#defect-form a").each(function () {
+
                 let idStr = this.getAttribute("id");
+
+                if (idStr == null) return;
+                if (idStr.includes("delete-") == false) return;
+
                 let id = idStr.replace("delete-", "");
 
                 this.onclick = function () {
@@ -361,6 +401,13 @@ $(document).ready(function () {
     // define onclick event for human body image - enables to add points to this image
     $("#body-img").on("click", function(e) {
 
+        var img = $("#body-img");
+        var canAddPoint = img.attr("canaddpoint");
+
+        if (canAddPoint === "false") return;
+
+        console.log("can edit");
+
         var top = getCurrentImageTop(this, e);
         var left = getCurrentImageLeft(this, e);
 
@@ -378,4 +425,13 @@ $(document).ready(function () {
     img.addEventListener('wheel', function(){
         movePoints();
     });
+    img.addEventListener('mousemove', function(){
+        movePoints();
+    });
+
+    $("#add-point-to-body-btn").on("click", function(e) {
+        console.log("logg");
+        SetAbilityToAddPoints(true);
+    });
+
 });
