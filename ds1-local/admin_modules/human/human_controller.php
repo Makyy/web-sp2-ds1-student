@@ -33,6 +33,7 @@ class human_controller  extends ds1_base_controller
         $obyvatele->SetPDOConnection($this->ds1->GetPDOConnection());
 
         $obyvatelId = $this->loadRequestParam($request, 'obyvatel_id', 'all', null);
+        $obyvatel = $obyvatele->adminGetItemByID($obyvatelId);
 
         // AKCE
         // action - typ akce
@@ -48,6 +49,7 @@ class human_controller  extends ds1_base_controller
         $content_params["route_params"] = array();
         $content_params["controller"] = $this;
         $content_params["defects"] = $human->getDefectPointsByObyvatelId($obyvatelId);
+        $content_params["name"] = $obyvatel["jmeno"] . " " . $obyvatel["prijmeni"];
 
         // defaultni vysledek akce
         $result_msg = "";
