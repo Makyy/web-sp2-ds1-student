@@ -1,5 +1,8 @@
-/*
- * Returns top position on given image of given click event
+/**
+ * Returns top position on given image of given click event.
+ * @param img image
+ * @param e click event
+ * @returns {number} top offset of click on image
  */
 function getCurrentImageTop(img, e) {
 
@@ -7,8 +10,11 @@ function getCurrentImageTop(img, e) {
     return Math.round( (e.clientY - offset_t) );
 }
 
-/*
+/**
  * Returns left position on given image of given click event
+ * @param img image
+ * @param e click event
+ * @returns {number} left offset of click on image
  */
 function getCurrentImageLeft(img, e) {
 
@@ -16,8 +22,10 @@ function getCurrentImageLeft(img, e) {
     return Math.round( (e.clientX - offset_l) );
 }
 
-/*
- * Returns class name based on point position
+/**
+ * Returns class name based on point position.
+ * @param isleft true if picture is on left side, false on right
+ * @returns {string} class name for point div
  */
 function getPointDivClass(isleft){
 
@@ -29,8 +37,10 @@ function getPointDivClass(isleft){
     }
 }
 
-/*
- * Returns path to point picture based on its position
+/**
+ * Returns path to point picture based on its position.
+ * @param isleft true if picture is on left side, false on right
+ * @returns {string} path to image
  */
 function getPointPicturePath(isleft){
 
@@ -42,9 +52,11 @@ function getPointPicturePath(isleft){
     }
 }
 
-/*
+/**
  * Finds out left or right side based on given horizontal
- * ratio of point to human body picture
+ * ratio of point to human body picture.
+ * @param leftratio ratio of point to width of origin image width.
+ * @returns {boolean} true if picture is on left side, false on right
  */
 function isOnLeftSide(leftratio){
 
@@ -57,17 +69,32 @@ function isOnLeftSide(leftratio){
     }
 }
 
+/**
+ * Gets width parameter from given string.
+ * @param size given string
+ * @returns {number} width
+ */
 function getWidth(size){
     var n = size.indexOf("px");
     return parseFloat(size.substring(0, n));
 }
 
+/**
+ * Gets height parameter from given string.
+ * @param size given string
+ * @returns {number} height
+ */
 function getHeight(size){
     var n = size.indexOf("px");
     var sub = size.substring(n + 2, size.length - 1);
     return parseFloat(sub);
 }
 
+/**
+ * Sets visibility of given point.
+ * @param point
+ * @param isvisible true if visible, false if not
+ */
 function setPointVisibility(point, isvisible){
 
     var visibility = "visible";
@@ -78,6 +105,13 @@ function setPointVisibility(point, isvisible){
     $(point).css({"visibility" : visibility});
 }
 
+/**
+ * Checks given point if is outside of picture. If so,
+ * to point will be set hidden visibility.
+ * @param point
+ * @param top point coordinate
+ * @param left point coordinate
+ */
 function checkPointVisibility(point, top, left){
 
     var img = $("#body-img");
@@ -104,11 +138,16 @@ function checkPointVisibility(point, top, left){
 
 }
 
-/*
- * Define on document ready
- */
+
 $(document).ready(function () {
 
+    /**
+     * Gets andjustment for point picture (for visual purpose
+     * - to put picture exactly on coordinates). Adjustment is
+     * based on side of body image (left or right), where point is.
+     * @param leftratio ratio of point to width of origin image width.
+     * @returns {number[]} point picture adjustment.
+     */
     function getPointAdjustment(leftratio){
 
         var isleft = isOnLeftSide(leftratio);
@@ -119,8 +158,10 @@ $(document).ready(function () {
             return [-18, 10];
         }
     }
-    /*
-     * Position of all points will be adjusted by actual picture size.
+
+    /**
+     * Move position of all points. Position will be
+     * adjusted by actual picture size.
      */
     function movePoints() {
 
@@ -141,6 +182,14 @@ $(document).ready(function () {
         });
     }
 
+    /**
+     * Moves given point.
+     * @param point
+     * @param imgHeight actual image height
+     * @param imgWidth actual image width
+     * @param offsetTop top offset of image frame in case o zoom
+     * @param offsetLeft left offset of image frame in case o zoom
+     */
     function movePoint(point, imgHeight, imgWidth, offsetTop, offsetLeft) {
 
         var ratiotop = $(point).attr("ratiotop");
@@ -155,6 +204,17 @@ $(document).ready(function () {
         checkPointVisibility(point, newPosition[0]- adjustment[0], newPosition[1] - adjustment[1]);
     }
 
+    /**
+     * Calculates position by given ratio of coordinates to origin image size
+     * @param ratioTop ratio of coordinate to origin image height
+     * @param ratioLeft ratio of coordinate to origin image width
+     * @param imgHeight actual image height
+     * @param imgWidth actual image width
+     * @param adjustment adjustment for point image (for visual purpose - to put image exactly on the coordinates)
+     * @param offsetTop top offset of image frame in case o zoom
+     * @param offsetLeft left offset of image frame in case of zoom
+     * @returns {number[]} new point position
+     */
     function getNewPosition(ratioTop, ratioLeft, imgHeight, imgWidth, adjustment, offsetTop, offsetLeft){
         var newTop = ratioTop * imgHeight + adjustment[0] - Math.abs(offsetTop);
         var newLeft = ratioLeft * imgWidth + adjustment[1] - Math.abs(offsetLeft);
@@ -162,8 +222,10 @@ $(document).ready(function () {
         return [newTop, newLeft];
     }
 
-    /*
-     * Adds new point
+    /**
+     * Adds new point (new point div over body image).
+     * @param top
+     * @param left
      */
     function addPoint(top, left) {
 
@@ -171,11 +233,14 @@ $(document).ready(function () {
         var stringSize = img.style.backgroundSize;
         var stringPosition = img.style.backgroundPosition;
 
-        //top = top + getHeight(stringPosition);
-        //top = top + getWidth(stringPosition);
+        var imgTop = getHeight(stringPosition);
+        var imgLeft = getWidth(stringPosition);
 
         var imgHeight = getHeight(stringSize);
         var imgWidth = getWidth(stringSize);
+
+        top = top - imgTop;
+        left = left - imgLeft;
 
         var ratiotop = top / imgHeight;
         var ratioleft = left / imgWidth;
@@ -194,45 +259,32 @@ $(document).ready(function () {
         pointdiv.setAttribute("ratiotop", ratiotop);
         pointdiv.setAttribute("ratioleft", ratioleft);
 
-        //TODO: tyhle počty ukládat nějak normálně
-        var img = document.getElementById("body-img");
-        var stringPosition = img.style.backgroundPosition;
-        var imgTop = getHeight(stringPosition);
-        var imgLeft = getWidth(stringPosition);
-
-        var adjustment = getPointAdjustment(ratioleft);
-        var actualPosition = getNewPosition(ratiotop, ratioleft, 4010, 5940, adjustment, imgTop, imgLeft);
-        var position = [(actualPosition[0] - adjustment[0]), (actualPosition[1] - adjustment[1])];
-
         definePointOnClick(pointdiv);
+
+        var imgFrame = $("#body-img");
+        var imgFrameHeight = imgFrame.height();
+        var imgFrameWidth = imgFrame.width();
+
+        if (imgWidth != imgFrameWidth) {
+            top = imgFrameHeight * ratiotop;
+            left = imgFrameWidth * ratioleft;
+        }
 
         let elements = {
             pointdiv: pointdiv,
             image: image,
             label: label,
-            actualPosition: [top, left]//actualPosition
+            actualPosition: [top, left]
         };
 
         savePoint(elements);
     }
 
     /**
-     * Zooms to given coordinates.
-     * @param x
-     * @param y
+     * Sets 'canaddpoint' attribute to body image.
+     * @param canAdd true if points can be added
+     * @constructor
      */
-    function zoomToCoordinations(x, y) {
-
-        // set x, y coordinates
-        wheelzoom(document.querySelector('img.zoom'), {zoomToX: x, zoomToY: y});
-
-        // triggers zooming
-        document.querySelector('img.zoom').dispatchEvent(new CustomEvent('zoomto'));
-
-        // set defaults for next zooming
-        document.querySelector('img.zoom').dispatchEvent(new CustomEvent('wheelzoom.defaultcoordinates'));
-    }
-
     function SetAbilityToAddPoints(canAdd){
         if (canAdd == true){
             $("#body-img").attr("canaddpoint", "true");
@@ -244,8 +296,9 @@ $(document).ready(function () {
         }
     }
 
-    /*
+    /**
      * Define on click event for point
+     * @param div
      */
     function definePointOnClick(div){
 
@@ -254,9 +307,8 @@ $(document).ready(function () {
             var img = $("#body-img");
             var canAddPoint = img.attr("canaddpoint");
 
+            // if points can be added
             if (canAddPoint === "false") return;
-
-            console.log("can edit");
 
             var top = getCurrentImageTop(img, e);
             var left = getCurrentImageLeft(img, e);
@@ -422,8 +474,10 @@ $(document).ready(function () {
         definePointOnClick(this);
     });
 
+    // register zooming
     wheelzoom(document.querySelector('img.zoom'));
 
+    // register moving points on zooming
     var img = document.getElementById("body-img");
     img.addEventListener('wheel', function(){
         movePoints();
@@ -432,8 +486,8 @@ $(document).ready(function () {
         movePoints();
     });
 
+    // click event for adding point - ensures enabling adding
     $("#add-point-to-body-btn").on("click", function(e) {
-        console.log("logg");
         SetAbilityToAddPoints(true);
     });
 
