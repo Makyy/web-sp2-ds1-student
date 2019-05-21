@@ -166,8 +166,16 @@ $(document).ready(function () {
      * Adds new point
      */
     function addPoint(top, left) {
-        var imgHeight = $("#body-img").height();
-        var imgWidth = $("#body-img").width();
+
+        var img = document.getElementById("body-img");
+        var stringSize = img.style.backgroundSize;
+        var stringPosition = img.style.backgroundPosition;
+
+        //top = top + getHeight(stringPosition);
+        //top = top + getWidth(stringPosition);
+
+        var imgHeight = getHeight(stringSize);
+        var imgWidth = getWidth(stringSize);
 
         var ratiotop = top / imgHeight;
         var ratioleft = left / imgWidth;
@@ -194,6 +202,7 @@ $(document).ready(function () {
 
         var adjustment = getPointAdjustment(ratioleft);
         var actualPosition = getNewPosition(ratiotop, ratioleft, 4010, 5940, adjustment, imgTop, imgLeft);
+        var position = [(actualPosition[0] - adjustment[0]), (actualPosition[1] - adjustment[1])];
 
         definePointOnClick(pointdiv);
 
@@ -201,7 +210,7 @@ $(document).ready(function () {
             pointdiv: pointdiv,
             image: image,
             label: label,
-            actualPosition: actualPosition
+            actualPosition: [top, left]//actualPosition
         };
 
         savePoint(elements);

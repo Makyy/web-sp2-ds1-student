@@ -88,15 +88,15 @@
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes fontsizeanimation  {
-    0%   {font-size:0px;}
-    70%  {font-size:20px;}
-    100% {font-size:13px;}
+    0%   {font-size:0px;opacity: 0;width: 0px}
+    70%  {font-size:20px;opacity: 0.7;width: 70px}
+    100% {font-size:13px;opacity: 1;width: 100px}
 }
 
 @keyframes fontsizeanimation {
-    0%   {font-size:0px;}
-    70%  {font-size:20px;}
-    100% {font-size:13px;}
+    0%   {font-size:0px;opacity: 0;width: 0px}
+    70%  {font-size:20px;opacity: 0.7;width: 70px}
+    100% {font-size:13px;opacity: 1;width: 100px}
 }
 
 /* Safari 4.0 - 8.0 */

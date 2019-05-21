@@ -18,6 +18,7 @@
                         <div class="human-label <?php echo getPointDivClass($defect["pos_y"]) ?>"
                              ratiotop="<?php echo getRatioTop($defect["pos_x"]) ?>"
                              ratioleft="<?php echo getRatioLeft($defect["pos_y"]) ?>"
+                             x="<?php echo $defect["pos_x"] ?>" y="<?php echo $defect["pos_y"] ?>"
                              style="top:<?php echo $defect["pos_x"] ?>px; left:<?php echo $defect["pos_y"] ?>px;">
                             <img src="<?php echo getPointPicture($defect["pos_y"]) ?>" alt="defect point">
                             <label><?php echo $defect["nazev"] ?></label>
@@ -65,13 +66,13 @@
 
     function getRatioTop($imgval) {
 
-        $height = 4010;
+        $height = 500;//4041;
         return abs($imgval / $height);
     }
 
     function getRatioLeft($imgval) {
 
-        $width = 5940;
+        $width = 735;//5940;
         return abs($imgval / $width);
     }
 
