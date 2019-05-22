@@ -9,9 +9,11 @@
             <?php if(isset($name)) echo "<h4>$name</h4>" ?>
         </div>
         <div class="row">
-            <div id="body-div" class="col-lg-9 col-md-12 col-sm-12" style="position: relative">
+            <div id="body-div" class="col-lg-9 col-md-12 col-sm-12">
 
-                <a class="btn btn-primary btn-sm" id="zoom-out-button" >ZOOM OUT</a>
+                <a class="btn btn-primary btn-sm" id="zoom-out-button" title="Zrušit přiblížení" ><i class="icon-search"></i> ZOOM OUT</a>
+                <a class="btn btn-success btn-sm" id="add-point-to-body-btn" title="Přidat defekt" ><i class="icon-plus"></i> DEFECT</a>
+
                 <img class="default-cursor zoom" canaddpoint="false" height="500" id="body-img" originwidth="1645" originheight="4010" src="/admin/template/img/defekty_obyvatel/human-body.jpg" alt="human body" class="img-fluid">
 
                 <?php foreach ($defects as $defect) { ?>
@@ -44,9 +46,9 @@
                     <?php } ?>
 
                     <?php if(count($defects)>0)
-                        echo '<input type="submit" class="btn btn-success form-control mt-2" value="Uložit">';
+                        echo '<input type="submit" class="btn btn-primary form-control mt-2" value="Uložit" title="Uložit změny">';
                     ?>
-                    <input id="add-point-to-body-btn" type="button" class="btn btn-primary form-control mt-2" value="Přidat defekt">
+
                 </form>
             </div>
         </div>

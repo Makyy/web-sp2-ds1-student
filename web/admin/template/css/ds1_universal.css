@@ -206,6 +206,11 @@
     min-width: 182px;
 }
 
+#human-defects #body-div {
+    position: relative;
+    overflow: hidden;
+}
+
 #human-defects img {
     width: auto;
     margin: 0;
@@ -228,11 +233,11 @@
     round-clip: 4px;
     background-color: ghostwhite;
     border-radius: 5px;
-    -webkit-box-shadow:rgba(0,0,0,0.4) 0px 5px 15px, inset rgba(95,178,281,0.35) 0px -10px 20px;
-    -khtml-box-shadow:rgba(0,0,0,0.4) 0px 5px 15px, inset rgba(95,178,281,0.35) 0px -10px 20px;
-    -moz-box-shadow:rgba(0,0,0,0.3) 0px 5px 15px, inset rgba(95,178,281,0.35) 0px -10px 20px;
-    -o-box-shadow:rgba(0,0,0,0.4) 0px 5px 15px, inset rgba(95,178,281,0.35) 0px -10px 20px;
-    box-shadow:rgba(0,0,0,0.4) 0px 5px 15px, inset rgba(95,178,281,0.35) 0px -10px 20px;
+    -webkit-box-shadow:rgba(0,0,0,0.7) 0px 5px 15px, inset white 0px -10px 20px;
+    -khtml-box-shadow:rgba(0,0,0,0.7) 0px 5px 15px, inset white 0px -10px 20px;
+    -moz-box-shadow:rgba(0,0,0,0.7) 0px 5px 15px, inset white 0px -10px 20px;
+    -o-box-shadow:rgba(0,0,0,0.7) 0px 5px 15px, inset white 0px -10px 20px;
+    box-shadow:rgba(0,0,0,0.7) 0px 5px 15px, inset white 0px -10px 20px;
 }
 
 #human-defects .hidden-label {
@@ -244,7 +249,25 @@
     position: absolute;
     margin-top: 10px;
     margin-left: 10px;
-    opacity: 0.5;
+    opacity: 0.65;
+    width: 90px;
+}
+
+#zoom-out-button:hover{
+    opacity: 1 !important;
+}
+
+#human-defects #body-div #add-point-to-body-btn{
+    color: white;
+    position: absolute;
+    margin-top: 48px;
+    margin-left: 10px;
+    opacity: 0.65;
+    width: 90px;
+}
+
+#add-point-to-body-btn:hover{
+    opacity: 1 !important;
 }
 
 

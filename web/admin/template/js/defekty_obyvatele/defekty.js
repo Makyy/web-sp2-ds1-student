@@ -113,10 +113,12 @@ function setPointVisibility(point, isvisible){
 function checkPointVisibility(point, top, left){
 
     let img = $("#body-img");
-    let imgheight = img.height();
-    let imgwidth = img.width();
+    let pointW = $(point).width();
+    let pointH = $(point).height();
 
-    if (top < 0){           // top edge
+    if (pointH == 0) pointH = 30;
+
+    if ((top - pointH) < 0){// top edge
         setPointVisibility(point, false);
         return;
     }
@@ -124,16 +126,15 @@ function checkPointVisibility(point, top, left){
         setPointVisibility(point, false);
         return;
     }
-    if (top > imgheight){   // bottom edge
+    if (top > img.height()){   // bottom edge
         setPointVisibility(point, false);
         return;
     }
-    if (left > imgwidth){   // right edge
+    if ((left + pointW) > img.width()){   // right edge
         setPointVisibility(point, false);
         return;
     }
     setPointVisibility(point, true);
-
 }
 
 /**
@@ -171,8 +172,6 @@ $(document).ready(function () {
      * adjusted by actual picture size.
      */
     function movePoints() {
-
-        console.log("adjusting points");
 
         let img = document.getElementById("body-img");
         let stringSize = img.style.backgroundSize;
@@ -295,11 +294,13 @@ $(document).ready(function () {
     function SetAbilityToAddPoints(canAdd){
         if (canAdd == true){
             $("#body-img").attr("canaddpoint", "true");
-            $("#body-img").attr("class", "cross-cursor zoom");  // set cross cursor over image
+            $("#body-img").removeClass("default-cursor");
+            $("#body-img").addClass("cross-cursor");        // set cross cursor over image
         }
         else {
             $("#body-img").attr("canaddpoint", "false");
-            $("#body-img").attr("class", "default-cursor zoom");// set default cursor over image
+            $("#body-img").removeClass("cross-cursor");
+            $("#body-img").addClass("default-cursor");      // set default cursor over image
         }
     }
 
