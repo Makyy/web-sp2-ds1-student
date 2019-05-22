@@ -11,11 +11,12 @@
         <div class="row">
             <div id="body-div" class="col-lg-9 col-md-12 col-sm-12" style="position: relative">
 
+                <a class="btn btn-primary btn-sm" id="zoom-out-button" >ZOOM OUT</a>
                 <img class="default-cursor zoom" canaddpoint="false" height="500" id="body-img" originwidth="1645" originheight="4010" src="/admin/template/img/defekty_obyvatel/human-body.jpg" alt="human body" class="img-fluid">
 
                 <?php foreach ($defects as $defect) { ?>
                     <div id="defect-image-group-<?php echo $defect["id"] ?>">
-                        <div class="human-label <?php echo getPointDivClass($defect["pos_y"]) ?>"
+                        <div class="hidden-label human-label <?php echo getPointDivClass($defect["pos_y"]) ?>"
                              ratiotop="<?php echo getRatioTop($defect["pos_x"]) ?>"
                              ratioleft="<?php echo getRatioLeft($defect["pos_y"]) ?>"
                              x="<?php echo $defect["pos_x"] ?>" y="<?php echo $defect["pos_y"] ?>"
@@ -33,14 +34,10 @@
                     <?php $i = 1; foreach ($defects as $defect) { ?>
                         <div class="input-group mt-2" id="defect-group-<?php echo $defect["id"]?>">
                             <label style="align-content: center; width: 20px; text-align: center; padding-top: 6px;" for="<?php echo $defect["id"] ?>"><?php echo $i . "."; $i++; ?></label>
-                            <input type="text" class="form-control"
+                            <input type="text" class="form-control point-tb"
                                    id="<?php echo $defect["id"] ?>"
                                    value="<?php echo $defect["nazev"] ?>"
                                    name="def[<?php echo $defect["id"] ?>]">
-
-<!--
-                            <a class="btn btn-primary btn-sm ml-1 zoom-btn" style="padding-top:7px;color: #fafafa" id="zoomto<?php echo $defect["id"]?>-<?php echo $defect["pos_x"]?>,<?php echo $defect["pos_y"]?>" >ZOOM</a>
--->
                             <a class="btn btn-danger btn-sm ml-1" style="padding-top:6px;color: #fafafa" id="delete-<?php echo $defect["id"]?>"><i class="fa fa-fw fa-times"></i></a>
 
                         </div>

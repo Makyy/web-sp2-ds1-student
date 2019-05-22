@@ -87,71 +87,115 @@
 /* ************************************************************************************************************ */
 
 /* Safari 4.0 - 8.0 */
-@-webkit-keyframes fontsizeanimation  {
+@-webkit-keyframes font-animation-right  {
+    0%   {text-align: right;font-size:0px;opacity: 0;width: 0px}
+    70%  {text-align: right;font-size:20px;opacity: 0.7;width: 70px}
+    100% {text-align: right;font-size:13px;opacity: 1;width: 100px}
+}
+
+@keyframes font-animation-right {
+    0%   {text-align: right;font-size:0px;opacity: 0;width: 0px}
+    70%  {text-align: right;font-size:20px;opacity: 0.7;width: 70px}
+    100% {text-align: right;font-size:13px;opacity: 1;width: 100px}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes img-animation-right  {
+    0%   {right:100px;object-position: right top;opacity: 0; alignment: right; object-fit: cover;height: 25px; width: 40px}
+    100% {right:100px;object-position: right top;opacity: 1;alignment: right; object-fit: cover;height: 25px; width: 81px}
+}
+
+@keyframes img-animation-right {
+    0%   {right:100px;object-position: right top;opacity: 0; alignment: right; object-fit: cover;height: 25px; width: 40px}
+    100% {right:100px;object-position: right top;opacity: 1;alignment: right; object-fit: cover;height: 25px; width: 81px}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes font-animation-left  {
     0%   {font-size:0px;opacity: 0;width: 0px}
     70%  {font-size:20px;opacity: 0.7;width: 70px}
     100% {font-size:13px;opacity: 1;width: 100px}
 }
 
-@keyframes fontsizeanimation {
+@keyframes font-animation-left {
     0%   {font-size:0px;opacity: 0;width: 0px}
     70%  {font-size:20px;opacity: 0.7;width: 70px}
     100% {font-size:13px;opacity: 1;width: 100px}
 }
 
 /* Safari 4.0 - 8.0 */
-@-webkit-keyframes imganimation  {
-    0%   {object-position: -20% 0;opacity: 0; alignment: left; object-fit: cover;height: 25px; width: 40px}
-    100% {object-position: -20% 0;opacity: 1;alignment: left; object-fit: cover;height: 25px; width: 81px}
+@-webkit-keyframes img-animation-left  {
+    0%   {object-position: left top;opacity: 0; alignment: left; object-fit: cover;height: 25px; width: 40px}
+    100% {object-position: left top;opacity: 1;alignment: left; object-fit: cover;height: 25px; width: 81px}
 }
 
-@keyframes imganimation {
-    0%   {object-position: -20% 0;opacity: 0; alignment: left; object-fit: cover;height: 25px; width: 40px}
-    100% {object-position: -20% 0;opacity: 1;alignment: left; object-fit: cover;height: 25px; width: 81px}
+@keyframes img-animation-left {
+    0%   {object-position: left top;opacity: 0; alignment: left; object-fit: cover;height: 25px; width: 40px}
+    100% {object-position: left top;opacity: 1;alignment: left; object-fit: cover;height: 25px; width: 81px}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes font-size-animation  {
-    100% {font-size:16px;}
+    0%   {font-size:16px;}
+    100% {font-size:13px;}
 }
 
 @keyframes font-size-animation {
-    100% {font-size:16px;}
+    0%   {font-size:16px;}
+    100% {font-size:13px;}
 }
 
-.left-side label {
+#human-defects .left-side label {
     top: -10px !important;
     left: 88px !important;
     text-align: left;
+    -webkit-animation-name: font-animation-left; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    -webkit-animation-iteration-count: 1; /* Safari 4.0 - 8.0 */
+    animation-name: font-animation-left;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
 }
 
-.right-side label {
+#human-defects .right-side label {
     top: -10px !important;
     left: -105px !important;
-    text-align: right !important;
+    text-align: right;
+    -webkit-animation-name: font-animation-right; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    -webkit-animation-iteration-count: 1; /* Safari 4.0 - 8.0 */
+    animation-name: font-animation-right;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+}
+
+#human-defects .left-side img {
+    -webkit-animation-name: img-animation-left; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    -webkit-animation-iteration-count: 1; /* Safari 4.0 - 8.0 */
+    animation-name: img-animation-left;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+}
+
+#human-defects .right-side img {
+    -webkit-animation-name: img-animation-right; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    -webkit-animation-iteration-count: 1; /* Safari 4.0 - 8.0 */
+    animation-name: img-animation-right;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
 }
 
 #human-defects .human-label img {
     position: absolute;
     height: 25px;
-    -webkit-animation-name: imganimation; /* Safari 4.0 - 8.0 */
-    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
-    -webkit-animation-iteration-count: 1; /* Safari 4.0 - 8.0 */
-    animation-name: imganimation;
-    animation-duration: 1s;
-    animation-iteration-count: 1;
 }
 
 #human-defects .human-label label {
     position: absolute;
     font-weight: bold;
     width: 100px;
-    -webkit-animation-name: fontsizeanimation; /* Safari 4.0 - 8.0 */
-    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
-    -webkit-animation-iteration-count: 1; /* Safari 4.0 - 8.0 */
-    animation-name: fontsizeanimation;
-    animation-duration: 1s;
-    animation-iteration-count: 1;
     font-size: 13px;
 }
 
@@ -159,6 +203,7 @@
     position: absolute;
     top: 0;
     left: 0;
+    min-width: 182px;
 }
 
 #human-defects img {
@@ -166,18 +211,40 @@
     margin: 0;
 }
 
-.cross-cursor {
+#human-defects .cross-cursor {
     cursor: crosshair;
 }
 
-.default-cursor {
+#human-defects .default-cursor {
     cursor: default;
 }
 
-#human-defects .human-label label:hover{
-    color: #5fb2da !important;
-    font-size:16px;
+#human-defects .human-label:hover > label{
+    font-size:13px;
+    text-align: center;
+    padding: 2px;
     top: -10px;
+    z-index: 100;
+    round-clip: 4px;
+    background-color: ghostwhite;
+    border-radius: 5px;
+    -webkit-box-shadow:rgba(0,0,0,0.4) 0px 5px 15px, inset rgba(95,178,281,0.35) 0px -10px 20px;
+    -khtml-box-shadow:rgba(0,0,0,0.4) 0px 5px 15px, inset rgba(95,178,281,0.35) 0px -10px 20px;
+    -moz-box-shadow:rgba(0,0,0,0.3) 0px 5px 15px, inset rgba(95,178,281,0.35) 0px -10px 20px;
+    -o-box-shadow:rgba(0,0,0,0.4) 0px 5px 15px, inset rgba(95,178,281,0.35) 0px -10px 20px;
+    box-shadow:rgba(0,0,0,0.4) 0px 5px 15px, inset rgba(95,178,281,0.35) 0px -10px 20px;
+}
+
+#human-defects .hidden-label {
+    visibility: hidden;
+}
+
+#human-defects #body-div #zoom-out-button {
+    color: white;
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 10px;
+    opacity: 0.5;
 }
 
 

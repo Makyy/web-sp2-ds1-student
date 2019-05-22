@@ -6,7 +6,7 @@
  */
 function getCurrentImageTop(img, e) {
 
-    var offset_t = $(img).offset().top - $(window).scrollTop();
+    let offset_t = $(img).offset().top - $(window).scrollTop();
     return Math.round( (e.clientY - offset_t) );
 }
 
@@ -18,7 +18,7 @@ function getCurrentImageTop(img, e) {
  */
 function getCurrentImageLeft(img, e) {
 
-    var offset_l = $(img).offset().left - $(window).scrollLeft();
+    let offset_l = $(img).offset().left - $(window).scrollLeft();
     return Math.round( (e.clientX - offset_l) );
 }
 
@@ -60,7 +60,7 @@ function getPointPicturePath(isleft){
  */
 function isOnLeftSide(leftratio){
 
-    var border = 0.5;
+    let border = 0.5;
     if (leftratio > border){
         return true;
     }
@@ -75,7 +75,7 @@ function isOnLeftSide(leftratio){
  * @returns {number} width
  */
 function getWidth(size){
-    var n = size.indexOf("px");
+    let n = size.indexOf("px");
     return parseFloat(size.substring(0, n));
 }
 
@@ -85,8 +85,8 @@ function getWidth(size){
  * @returns {number} height
  */
 function getHeight(size){
-    var n = size.indexOf("px");
-    var sub = size.substring(n + 2, size.length - 1);
+    let n = size.indexOf("px");
+    let sub = size.substring(n + 2, size.length - 1);
     return parseFloat(sub);
 }
 
@@ -97,10 +97,8 @@ function getHeight(size){
  */
 function setPointVisibility(point, isvisible){
 
-    var visibility = "visible";
-    if (isvisible == false){
-        visibility = "hidden";
-    }
+    let visibility = "visible";
+    if (isvisible == false) visibility = "hidden";
 
     $(point).css({"visibility" : visibility});
 }
@@ -114,23 +112,23 @@ function setPointVisibility(point, isvisible){
  */
 function checkPointVisibility(point, top, left){
 
-    var img = $("#body-img");
-    var imgheight = img.height();
-    var imgwidth = img.width();
+    let img = $("#body-img");
+    let imgheight = img.height();
+    let imgwidth = img.width();
 
-    if (top < 0){
+    if (top < 0){           // top edge
         setPointVisibility(point, false);
         return;
     }
-    if (left < 0){
+    if (left < 0){          // left edge
         setPointVisibility(point, false);
         return;
     }
-    if (top > imgheight){
+    if (top > imgheight){   // bottom edge
         setPointVisibility(point, false);
         return;
     }
-    if (left > imgwidth){
+    if (left > imgwidth){   // right edge
         setPointVisibility(point, false);
         return;
     }
@@ -138,6 +136,15 @@ function checkPointVisibility(point, top, left){
 
 }
 
+/**
+ * Resets animation to given element.
+ * @param el element
+ */
+function resetAnimation(el) {
+    el.style.animation = 'none';
+    el.offsetHeight; /* trigger reflow */
+    el.style.animation = null;
+}
 
 $(document).ready(function () {
 
@@ -150,7 +157,7 @@ $(document).ready(function () {
      */
     function getPointAdjustment(leftratio){
 
-        var isleft = isOnLeftSide(leftratio);
+        let isleft = isOnLeftSide(leftratio);
         if (isleft ==  true){
             return [-18, -60];
         }
@@ -167,15 +174,15 @@ $(document).ready(function () {
 
         console.log("adjusting points");
 
-        var img = document.getElementById("body-img");
-        var stringSize = img.style.backgroundSize;
-        var stringPosition = img.style.backgroundPosition;
+        let img = document.getElementById("body-img");
+        let stringSize = img.style.backgroundSize;
+        let stringPosition = img.style.backgroundPosition;
 
-        var imgHeight = getHeight(stringSize);
-        var imgWidth = getWidth(stringSize);
+        let imgHeight = getHeight(stringSize);
+        let imgWidth = getWidth(stringSize);
 
-        var imgTop = getHeight(stringPosition);
-        var imgLeft = getWidth(stringPosition);
+        let imgTop = getHeight(stringPosition);
+        let imgLeft = getWidth(stringPosition);
 
         $(".human-label").each(function () {
             movePoint(this, imgHeight, imgWidth, imgTop, imgLeft);
@@ -192,11 +199,11 @@ $(document).ready(function () {
      */
     function movePoint(point, imgHeight, imgWidth, offsetTop, offsetLeft) {
 
-        var ratiotop = $(point).attr("ratiotop");
-        var ratioleft = $(point).attr("ratioleft");
-        var adjustment = getPointAdjustment(ratioleft);
+        let ratiotop = $(point).attr("ratiotop");
+        let ratioleft = $(point).attr("ratioleft");
+        let adjustment = getPointAdjustment(ratioleft);
 
-        var newPosition = getNewPosition(ratiotop, ratioleft, imgHeight, imgWidth, adjustment, offsetTop, offsetLeft);
+        let newPosition = getNewPosition(ratiotop, ratioleft, imgHeight, imgWidth, adjustment, offsetTop, offsetLeft);
 
         $(point).css({"top": newPosition[0] + "px"});
         $(point).css({"left": newPosition[1] + "px"});
@@ -216,8 +223,8 @@ $(document).ready(function () {
      * @returns {number[]} new point position
      */
     function getNewPosition(ratioTop, ratioLeft, imgHeight, imgWidth, adjustment, offsetTop, offsetLeft){
-        var newTop = ratioTop * imgHeight + adjustment[0] - Math.abs(offsetTop);
-        var newLeft = ratioLeft * imgWidth + adjustment[1] - Math.abs(offsetLeft);
+        let newTop = ratioTop * imgHeight + adjustment[0] - Math.abs(offsetTop);
+        let newLeft = ratioLeft * imgWidth + adjustment[1] - Math.abs(offsetLeft);
 
         return [newTop, newLeft];
     }
@@ -229,31 +236,31 @@ $(document).ready(function () {
      */
     function addPoint(top, left) {
 
-        var img = document.getElementById("body-img");
-        var stringSize = img.style.backgroundSize;
-        var stringPosition = img.style.backgroundPosition;
+        let img = document.getElementById("body-img");
+        let stringSize = img.style.backgroundSize;
+        let stringPosition = img.style.backgroundPosition;
 
-        var imgTop = getHeight(stringPosition);
-        var imgLeft = getWidth(stringPosition);
+        let imgTop = getHeight(stringPosition);
+        let imgLeft = getWidth(stringPosition);
 
-        var imgHeight = getHeight(stringSize);
-        var imgWidth = getWidth(stringSize);
+        let imgHeight = getHeight(stringSize);
+        let imgWidth = getWidth(stringSize);
 
         top = top - imgTop;
         left = left - imgLeft;
 
-        var ratiotop = top / imgHeight;
-        var ratioleft = left / imgWidth;
-        var isleft = isOnLeftSide(ratioleft);
+        let ratiotop = top / imgHeight;
+        let ratioleft = left / imgWidth;
+        let isleft = isOnLeftSide(ratioleft);
 
-        var image = document.createElement("img");
+        let image = document.createElement("img");
         image.setAttribute("src", getPointPicturePath(isleft));
         image.setAttribute("alt", "defect point");
 
-        var label = document.createElement("label");
+        let label = document.createElement("label");
         label.innerHTML = "DEFECT";
 
-        var pointdiv = document.createElement("div");
+        let pointdiv = document.createElement("div");
         pointdiv.style.cssText = "top:" + top + "px; left:" + left + "px;";
         pointdiv.setAttribute("class", getPointDivClass(isleft));
         pointdiv.setAttribute("ratiotop", ratiotop);
@@ -261,9 +268,9 @@ $(document).ready(function () {
 
         definePointOnClick(pointdiv);
 
-        var imgFrame = $("#body-img");
-        var imgFrameHeight = imgFrame.height();
-        var imgFrameWidth = imgFrame.width();
+        let imgFrame = $("#body-img");
+        let imgFrameHeight = imgFrame.height();
+        let imgFrameWidth = imgFrame.width();
 
         if (imgWidth != imgFrameWidth) {
             top = imgFrameHeight * ratiotop;
@@ -288,11 +295,11 @@ $(document).ready(function () {
     function SetAbilityToAddPoints(canAdd){
         if (canAdd == true){
             $("#body-img").attr("canaddpoint", "true");
-            $("#body-img").attr("class", "cross-cursor zoom");
+            $("#body-img").attr("class", "cross-cursor zoom");  // set cross cursor over image
         }
         else {
             $("#body-img").attr("canaddpoint", "false");
-            $("#body-img").attr("class", "default-cursor zoom");
+            $("#body-img").attr("class", "default-cursor zoom");// set default cursor over image
         }
     }
 
@@ -304,21 +311,19 @@ $(document).ready(function () {
 
         div.onclick = function (e) {
 
-            var img = $("#body-img");
-            var canAddPoint = img.attr("canaddpoint");
+            let img = $("#body-img");
 
-            // if points can be added
-            if (canAddPoint === "false") return;
+            if (img.attr("canaddpoint") === "false") return; // if points can be added
 
-            var top = getCurrentImageTop(img, e);
-            var left = getCurrentImageLeft(img, e);
+            let top = getCurrentImageTop(img, e);
+            let left = getCurrentImageLeft(img, e);
 
             addPoint(top, left);
         };
     }
 
     /**
-     * Ukládání bodu do databáze
+     * Saves defect to database.
      *
      * @param elements
      */
@@ -338,9 +343,9 @@ $(document).ready(function () {
     }
 
     /**
-     * Přidání vstupního prvku pro editaci
+     * Adds defect input for editing.
      *
-     * @param id : ID defektu v databázi
+     * @param id : Defect id  from database
      */
     function addDefectInput(id, x, y) {
         let submitButton = $("form#defect-form input[type=submit]");
@@ -358,7 +363,7 @@ $(document).ready(function () {
     }
 
     /**
-     * Přidání bodu do obrázku
+     * Adds defect point to body image.
      *
      * @param elements
      * @param id
@@ -376,7 +381,7 @@ $(document).ready(function () {
     }
 
     /**
-     * Odstranění defektu z DB
+     * Deletes defect from database.
      *
      * @param id
      */
@@ -391,13 +396,35 @@ $(document).ready(function () {
             if (data) {
                 removeDefectInput(id);
             } else {
-                alert("Nepodařilo se odstranit defekt.");
+                alert("Nepodařilo se smazat defekt.");
             }
         });
     }
 
     /**
-     * Odstranení vstupního prvku a bodu z obrázku po odstranění z DB
+     * Resets animation for defect point div.
+     * @param id of defect
+     */
+    function resetDefectDivAnimation(id) {
+
+        let div_id = "defect-image-group-" + id;
+        let div = document.getElementById(div_id);
+
+        resetDivAnimation(div);
+    }
+
+    /**
+     * Resets animation for image and label in given div.
+     * @param div
+     */
+    function resetDivAnimation(div) {
+
+        resetAnimation(div.getElementsByTagName("IMG")[0]);     // restart image animation
+        resetAnimation(div.getElementsByTagName("LABEL")[0]);   // restart label animation
+    }
+
+    /**
+     * Deletes defect with its input after deleting defect from database.
      *
      * @param id
      */
@@ -412,10 +439,10 @@ $(document).ready(function () {
     }
 
     /**
-     * Zaregistrování onclick handleru pro tlačítko na odstranění defektu
+     * Registers onclick handler to button for defect deleting.
      *
-     * @param id : int|null pokud je vyplněno nastaví se handler přímo pro dané tlačítko, pokud ne, nastaví se pro
-     *                      všechny mazací tlačítka ve formuláři
+     * @param id : int|null if not null, handler is set directly to given button,
+     *             if not handler is set to every deleting button in form.
      */
     function registerRemoveOnclickHandler(id) {
         if (id === null) {
@@ -440,14 +467,22 @@ $(document).ready(function () {
                     removeDefect(id);
                 }
             });
+            $("form#defect-form #defect-group-" + id + " input").focusin(function () { //register method of focus to defect input
+                resetDefectDivAnimation(id);
+            });
         }
     }
 
     $(document).ready(function () {
+
         movePoints();  // adjust points to actual image size
 
-        // zaregistrování onlick eventu pro odstranění defektu
-        registerRemoveOnclickHandler(null);
+        $("#human-defects .human-label").each(function () {
+            $(this).removeClass("hidden-label");
+            resetDivAnimation(this);
+        });
+
+        registerRemoveOnclickHandler(null); // register on click - delete defect
     });
 
     // define resize event that calls points adjusting to actual image size.
@@ -456,15 +491,10 @@ $(document).ready(function () {
     // define onclick event for human body image - enables to add points to this image
     $("#body-img").on("click", function(e) {
 
-        var img = $("#body-img");
-        var canAddPoint = img.attr("canaddpoint");
+        if ($(this).attr("canaddpoint") === "false") return;    // if adding a point is enabled
 
-        if (canAddPoint === "false") return;
-
-        console.log("can edit");
-
-        var top = getCurrentImageTop(this, e);
-        var left = getCurrentImageLeft(this, e);
+        let top = getCurrentImageTop(this, e);
+        let left = getCurrentImageLeft(this, e);
 
         addPoint(top, left);
     });
@@ -477,18 +507,26 @@ $(document).ready(function () {
     // register zooming
     wheelzoom(document.querySelector('img.zoom'));
 
-    // register moving points on zooming
-    var img = document.getElementById("body-img");
-    img.addEventListener('wheel', function(){
-        movePoints();
-    });
-    img.addEventListener('mousemove', function(){
-        movePoints();
-    });
+    // register moving points on zooming & dragging
+    let img = document.getElementById("body-img");
+    img.addEventListener('wheel',movePoints);
+    img.addEventListener('mousemove',movePoints);
 
     // click event for adding point - ensures enabling adding
     $("#add-point-to-body-btn").on("click", function(e) {
         SetAbilityToAddPoints(true);
     });
 
+    // register to input on focus that restart animation of defect point
+    $("form#defect-form .point-tb").each(function () {
+        $(this).focusin(function () {
+            resetDefectDivAnimation($(this).attr("id"));
+        });
+    });
+
+    // register function for button that ensures zooming out.
+    $("#human-defects #body-div #zoom-out-button").on("click", function() {
+        document.querySelector('img.zoom').dispatchEvent(new CustomEvent('wheelzoom.reset'));
+        movePoints();
+    });
 });
