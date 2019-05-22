@@ -113,10 +113,7 @@ function setPointVisibility(point, isvisible){
 function checkPointVisibility(point, top, left){
 
     let img = $("#body-img");
-    let pointW = $(point).width();
-    let pointH = $(point).height();
-
-    if (pointH == 0) pointH = 30;
+    let pointH = 30;
 
     if ((top - pointH) < 0){// top edge
         setPointVisibility(point, false);
@@ -130,7 +127,7 @@ function checkPointVisibility(point, top, left){
         setPointVisibility(point, false);
         return;
     }
-    if ((left + pointW) > img.width()){   // right edge
+    if ((left) > img.width()){   // right edge
         setPointVisibility(point, false);
         return;
     }
