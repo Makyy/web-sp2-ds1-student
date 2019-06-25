@@ -346,18 +346,25 @@ $(document).ready(function () {
      * @param id : Defect id  from database
      */
     function addDefectInput(id, x, y) {
-        let submitButton = $("form#defect-form input[type=submit]");
-        if (submitButton.is(":hidden")) {
-            submitButton.show();
-        }
-
         let form = $("form#defect-form");
         let inputs = $("form#defect-form input[type=text]");
         let len = inputs.length + 1;
 
+        showFormSaveButton();
+
         form.find("input:submit").before('<div class="input-group mt-2" id="defect-group-'+id+'"><label style="align-content: center; width: 20px; text-align: center; padding-top: 6px;"  for="' + id + '">' + len + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"><a class="btn btn-danger btn-sm ml-1" style="padding-top:6px;color: #fafafa" id="delete-'+ id +'"><i class="fa fa-fw fa-times"></i></a></div>');
 
         registerRemoveOnclickHandler(id);
+    }
+
+    /**
+     * Shows form submit button if hidden
+     */
+    function showFormSaveButton(){
+        let submitButton = $("form#defect-form input[type=submit]");
+        if (submitButton.is(":hidden")) {
+            submitButton.show();
+        }
     }
 
     /**
@@ -472,15 +479,14 @@ $(document).ready(function () {
     }
 
     $(document).ready(function () {
-
-        movePoints();  // adjust points to actual image size
-
         $("#human-defects .human-label").each(function () {
             $(this).removeClass("hidden-label");
             resetDivAnimation(this);
         });
 
         registerRemoveOnclickHandler(null); // register on click - delete defect
+
+        movePoints();  // adjust points to actual image size
     });
 
     // define resize event that calls points adjusting to actual image size.

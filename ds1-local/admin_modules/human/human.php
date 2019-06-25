@@ -13,20 +13,54 @@ class human  extends \ds1\core\ds1_base_model
 {
     public function addDefectPoint($x, $y, $obyvatelId)
     {
-        $array = array(
-            "pos_x" => $x,
-            "pos_y" => $y,
+        $humanArray = array(
             "obyvatel_id" => $obyvatelId
         );
+        $defectId = $this->DBInsert(TABLE_HUMAN, $humanArray);
 
-        return $this->DBInsert(TABLE_HUMAN, $array);
+        $positionArray = array(
+            "souradnice_x" => $x,
+            "souradnice_y" => $y,
+            "defekt_id" => $defectId
+        );
+        $this->DBInsert(TABLE_HUMAN_POSITION, $positionArray);
+
+        return $defectId;
     }
 
     public function getDefectPointsByObyvatelId($obyvatelId)
     {
         $where = array($this->DBHelperGetWhereItem("obyvatel_id", $obyvatelId));
 
-        return $this->DBSelectAll(TABLE_HUMAN, "*", $where);
+        $defectsArray = $this->DBSelectAll(TABLE_HUMAN, "*", $where);
+
+        // Assign to associative array by defect ID
+        // instead of:
+        //      array:
+        //          [0] => row
+        //          [1] => row
+        //
+        // it'll be:
+        //      array:
+        //          [id] => row
+        //          [id] => row
+        foreach ($defectsArray as $k => $defect)
+        {
+            $defectsArray[$defect["id"]] = $defect;
+            unset($defectsArray[$k]);
+        }
+
+        $positionsArray = [];
+        foreach ($defectsArray as $defect)
+        {
+            $where = array($this->DBHelperGetWhereItem('defekt_id', $defect['id']));
+            $positionsArray[] = $this->DBSelectOne(TABLE_HUMAN_POSITION, "*", $where);
+        }
+
+        return [
+            'defects' => $defectsArray,
+            'positions' => $positionsArray
+        ];
     }
 
     public function updateDefectName($defectId, $name)
@@ -39,8 +73,10 @@ class human  extends \ds1\core\ds1_base_model
 
     public function deleteDefectById($defectId)
     {
-        $where = array($this->DBHelperGetWhereItem("id", $defectId));
+        $where = array($this->DBHelperGetWhereItem("defekt_id", $defectId));
+        $this->DBDelete(TABLE_HUMAN_POSITION, $where, "");
 
+        $where = array($this->DBHelperGetWhereItem("id", $defectId));
         return $this->DBDelete(TABLE_HUMAN, $where, "");
     }
 }

@@ -16,15 +16,15 @@
 
                 <img class="default-cursor zoom" canaddpoint="false" height="500" id="body-img" originwidth="1645" originheight="4010" src="/admin/template/img/defekty_obyvatel/human-body.jpg" alt="human body" class="img-fluid">
 
-                <?php foreach ($defects as $defect) { ?>
-                    <div id="defect-image-group-<?php echo $defect["id"] ?>">
-                        <div class="hidden-label human-label <?php echo getPointDivClass($defect["pos_y"]) ?>"
-                             ratiotop="<?php echo getRatioTop($defect["pos_x"]) ?>"
-                             ratioleft="<?php echo getRatioLeft($defect["pos_y"]) ?>"
-                             x="<?php echo $defect["pos_x"] ?>" y="<?php echo $defect["pos_y"] ?>"
+                <?php foreach ($defects['positions'] as $defect) { ?>
+                    <div id="defect-image-group-<?php echo $defect["defekt_id"] ?>">
+                        <div class="hidden-label human-label <?php echo getPointDivClass($defect["souradnice_y"]) ?>"
+                             ratiotop="<?php echo getRatioTop($defect["souradnice_x"]) ?>"
+                             ratioleft="<?php echo getRatioLeft($defect["souradnice_y"]) ?>"
+                             x="<?php echo $defect["souradnice_x"] ?>" y="<?php echo $defect["souradnice_y"] ?>"
                              style="top:<?php echo $defect["pos_x"] ?>px; left:<?php echo $defect["pos_y"] ?>px;">
-                            <img src="<?php echo getPointPicture($defect["pos_y"]) ?>" alt="defect point">
-                            <label><?php echo $defect["nazev"] ?></label>
+                            <img src="<?php echo getPointPicture($defect["souradnice_y"]) ?>" alt="defect point">
+                            <label><?php echo getDefectLabel($defects, $defect['defekt_id'])?></label>
                         </div>
                     </div>
                 <?php } ?>
@@ -33,7 +33,7 @@
 
             <div class="col-lg-3 col-md-4 col-sm-12">
                 <form class="form" id="defect-form" method="post" action="<?php echo $form_action ?>">
-                    <?php $i = 1; foreach ($defects as $defect) { ?>
+                    <?php $i = 1; foreach ($defects['defects'] as $defect) { ?>
                         <div class="input-group mt-2" id="defect-group-<?php echo $defect["id"]?>">
                             <label style="align-content: center; width: 20px; text-align: center; padding-top: 6px;" for="<?php echo $defect["id"] ?>"><?php echo $i . "."; $i++; ?></label>
                             <input type="text" class="form-control point-tb"
@@ -44,9 +44,9 @@
 
                         </div>
                     <?php } ?>
-
-                    <?php if(count($defects)>0)
-                        echo '<input type="submit" class="btn btn-primary form-control mt-2" value="Uložit" title="Uložit změny">';
+                    <?php
+                        $display = count($defects['defects']) > 0 ? '' : 'display: none;';
+                    echo '<input type="submit" class="btn btn-primary form-control mt-2" value="Uložit" title="Uložit změny" style="' . $display . '">'
                     ?>
 
                 </form>
@@ -105,6 +105,10 @@
         else{
             return "/admin/template/img/defekty_obyvatel/path-top-right.png";
         }
+    }
+
+    function getDefectLabel($defects, $defectId){
+        return $defects['defects'][$defectId]["nazev"];
     }
 
 ?>

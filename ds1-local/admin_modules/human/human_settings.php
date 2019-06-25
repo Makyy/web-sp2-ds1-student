@@ -7,5 +7,13 @@
  */
 
 if (!defined("TABLE_HUMAN")) {
-    define("TABLE_HUMAN", "defekty_obyvatele");
+    define("TABLE_HUMAN", "ds1_defekty_obyvatele");
+}
+
+if(!defined("TABLE_HUMAN_POSITION")){
+    define("TABLE_HUMAN_POSITION", "ds1_defekty_obyvatele_pozice");
+}
+
+if(!defined("TABLE_HUMAN_PROGRESS")){
+    define("TABLE_HUMAN_PROGRESS", "ds1_defekty_obyvatele_prubeh");
 }
