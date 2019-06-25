@@ -22,7 +22,7 @@
                              ratiotop="<?php echo getRatioTop($defect["souradnice_x"]) ?>"
                              ratioleft="<?php echo getRatioLeft($defect["souradnice_y"]) ?>"
                              x="<?php echo $defect["souradnice_x"] ?>" y="<?php echo $defect["souradnice_y"] ?>"
-                             style="top:<?php echo $defect["pos_x"] ?>px; left:<?php echo $defect["pos_y"] ?>px;">
+                             style="top:<?php echo $defect["souradnice_x"] ?>px; left:<?php echo $defect["souradnice_y"] ?>px;">
                             <img src="<?php echo getPointPicture($defect["souradnice_y"]) ?>" alt="defect point">
                             <label><?php echo getDefectLabel($defects, $defect['defekt_id'])?></label>
                         </div>
