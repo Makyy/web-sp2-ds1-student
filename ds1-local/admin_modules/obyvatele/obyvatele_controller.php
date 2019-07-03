@@ -329,7 +329,7 @@ class obyvatele_controller extends ds1_base_controller
             $content_params["url_obyvatel_add_prepare"] = $this->makeUrlByRoute($this->route, array("action" => "obyvatel_add_prepare"));
 
             // url pro přidání defektu
-            $content_params["url_add_defect"] = $this->webGetBaseUrlLink() . "plugin/human?obyvatel_id=";
+            $content_params["url_add_defect"] = $this->webGetBaseUrlLink() . "plugin/human?action=detail&obyvatel_id=";
 
             // search
             $content_params["url_obyvatele_autocomplete"] = $this->makeUrlByRoute(DS1_ROUTE_ADMIN_OBYVATELE_API);

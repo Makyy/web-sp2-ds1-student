@@ -14,7 +14,7 @@ use ds1\core\ds1_base_controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class human_controller  extends ds1_base_controller
+class human_controller extends ds1_base_controller
 {
     public function indexAction(Request $request, $page = "")
     {
@@ -37,7 +37,7 @@ class human_controller  extends ds1_base_controller
 
         // AKCE
         // action - typ akce
-        $action = $this->loadRequestParam($request,"action", "all", "");
+        $action = $this->loadRequestParam($request, "action", "all", "");
 
         // univerzalni content params
         $content_params = array();
@@ -48,24 +48,42 @@ class human_controller  extends ds1_base_controller
         $content_params["route"] = $this->route;        // mam tam orders, je to automaticky z routingu
         $content_params["route_params"] = array();
         $content_params["controller"] = $this;
-        $content_params["defects"] = $human->getDefectPointsByObyvatelId($obyvatelId);
-        $content_params["name"] = $obyvatel["jmeno"] . " " . $obyvatel["prijmeni"];
 
         // defaultni vysledek akce
-        $result_msg = "";
-        $result_ok = true;
-        $content = $this->renderPhp(DS1_DIR_ADMIN_MODULES_FROM_ADMIN . "human/templates/admin_human_detail.inc.php",
-                                        $content_params,
-                                        true);
-
-        // vypsat hlavni template
         $main_params = array();
-        $main_params["content"] = $content;
-        $main_params["result_msg"] = $result_msg;
-        $main_params["result_ok"] = $result_ok;
+        $main_params["result_msg"] = "";
+        $main_params["result_ok"] = true;
 
-        if ($action === "")
+        // defaultní akce - list se seznamem defektů
+        if ($action === "" || $action === "filter")
         {
+            $filters = $this->loadRequestParam($request, "filter");
+
+            $content_params["entities"] = $human->getDefectsList($filters);
+            $content_params["form_filter_action"] = $this->makeUrlByRoute($this->route, array('action' => 'filter'));
+            $content_params["filter"] = $filters;
+
+            $content = $this->renderPhp(DS1_DIR_ADMIN_MODULES_FROM_ADMIN . "human/templates/admin_human_list.inc.php",
+                $content_params,
+                true);
+            // vypsat hlavni template
+            $main_params["content"] = $content;
+
+            return $this->renderAdminTemplate($main_params);
+        }
+
+        // detail obvyatele
+        if ($action === "detail")
+        {
+            $content_params["defects"] = $human->getDefectPointsByObyvatelId($obyvatelId);
+            $content_params["name"] = $obyvatel["jmeno"] . " " . $obyvatel["prijmeni"];
+
+            $content = $this->renderPhp(DS1_DIR_ADMIN_MODULES_FROM_ADMIN . "human/templates/admin_human_detail.inc.php",
+                $content_params,
+                true);
+
+            $main_params["content"] = $content;
+
             return $this->renderAdminTemplate($main_params);
         }
 
@@ -111,4 +129,4 @@ class human_controller  extends ds1_base_controller
         }
     }
 
-    }
+}

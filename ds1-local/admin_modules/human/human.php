@@ -9,6 +9,8 @@
 namespace ds1\admin_modules\human;
 
 
+use ds1\admin_modules\human\entity\defect_entity;
+
 class human  extends \ds1\core\ds1_base_model
 {
     public function addDefectPoint($x, $y, $obyvatelId)
@@ -78,5 +80,47 @@ class human  extends \ds1\core\ds1_base_model
 
         $where = array($this->DBHelperGetWhereItem("id", $defectId));
         return $this->DBDelete(TABLE_HUMAN, $where, "");
+    }
+
+    public function getDefectsList($filters = [])
+    {
+        // Vytvoření where podmínek podle zadaných filtrů
+        $where = array();
+        if (!empty($filters))
+        {
+            if (!empty($filters["datum_zacatek"]))
+            {
+                $where[] = $this->DBHelperGetWhereItem("datum_zacatek", $filters['datum_zacatek'], '>=');
+            }
+
+            if (!empty($filters["datum_konec"]))
+            {
+                $where[] = $this->DBHelperGetWhereItem("datum_konec", $filters['datum_konec'], '<=');
+            }
+        } else
+        {
+            $where[] = $this->DBHelperGetWhereItem("datum_konec", NULL, "IS");
+        }
+
+        $defectsResults = $this->DBSelectAll(TABLE_HUMAN, "*", $where);
+        $obyvateleResults = [];
+
+        foreach ($defectsResults as $key => $result)
+        {
+            $where = array($this->DBHelperGetWhereItem('id', $result['obyvatel_id']));
+            $obyvateleResults[$result['obyvatel_id']] = $this->DBSelectOne(TABLE_OBYVATELE, "*", $where);
+        }
+
+        $defectsCollection = array();
+        foreach ($defectsResults as $defect)
+        {
+            $entity = new defect_entity();
+            $entity->setDefectValues($defect);
+            $entity->setObyvatelValues($obyvateleResults[$defect['obyvatel_id']]);
+
+            $defectsCollection[] = $entity;
+        }
+
+        return $defectsCollection;
     }
 }
