@@ -53,6 +53,7 @@ class human_controller extends ds1_base_controller
         $main_params = array();
         $main_params["result_msg"] = "";
         $main_params["result_ok"] = true;
+        $main_params["title"] = "Defekty obyvatel";
 
         // defaultní akce - list se seznamem defektů
         if ($action === "" || $action === "filter")

@@ -15,8 +15,7 @@
 <!--                <a href="--><?php //echo $url_pridat_role;?><!--" class="btn btn-primary btn-sm"><i class="icon-plus"></i> Přidělit / upravit roli</a>-->
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
+        <div class="card-body">
 
                 <?php
                 // vypis informací uživatelích systému
@@ -70,6 +69,5 @@
                 // konec vypis dat
                 ?>
 
-            </div><!-- konec col-md-12 -->
         </div>
     </div>
