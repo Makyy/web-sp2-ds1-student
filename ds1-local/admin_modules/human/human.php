@@ -103,7 +103,7 @@ class human  extends \ds1\core\ds1_base_model
             $where[] = $this->DBHelperGetWhereItem("datum_konec", NULL, "IS");
         }
 
-        $defectsResults = $this->DBSelectAll(TABLE_HUMAN, "*", $where);
+        $defectsResults = $this->DBSelectAll(TABLE_HUMAN, "*", $where, "", array(['column' => 'datum_zacatek', 'sort'=> 'asc']));
         $obyvateleResults = [];
 
         foreach ($defectsResults as $key => $result)

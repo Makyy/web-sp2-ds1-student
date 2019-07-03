@@ -3,6 +3,7 @@
         <div class="card-header">
             <div class="pull-left">
                 Seznam defektů <?php if((isset($filter['datum_konec']) && empty($filter['datum_konec'])) || empty($filter)) echo '- aktivní'; ?>
+                <hr>
                 <form method="post" action="<?php echo $form_filter_action; ?>">
                     <th>Datum od: &nbsp;</th><input type="date" value="<?php echo $filter['datum_zacatek']; ?>" name="filter[datum_zacatek]">
                     <th>Datum do: &nbsp;</th><input type="date" value="<?php echo $filter['datum_konec']; ?>" name="filter[datum_konec]">
