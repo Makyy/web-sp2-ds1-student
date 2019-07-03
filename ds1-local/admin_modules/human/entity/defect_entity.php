@@ -8,7 +8,7 @@ namespace ds1\admin_modules\human\entity;
  *
  * @package ds1\admin_modules\human\entity
  */
-class defect_entity
+class defect_entity extends base_entity
 {
     // Tabulka ds1_defekt_obavatele
     public $defekt_id;
@@ -50,43 +50,18 @@ class defect_entity
     public $pozice_barva_text;
     public $pozice_barva_hex;
 
-    // Tabulka ds1_defekty_obyvatele_prubeh
-    public $prubeh_id;
-    public $prubeh_defekt_obyvatele_id;
-    public $prubeh_popis;
-    public $prubeh_stav;
-    public $prubeh_datum_vytvoreni;
-
     public function setDefectValues($dbRow)
     {
-        $this->setValues("defekt", $dbRow);
+        $this->setProperties("defekt", $dbRow);
     }
 
     public function setObyvatelValues($dbRow)
     {
-        $this->setValues("obyvatel", $dbRow);
+        $this->setProperties("obyvatel", $dbRow);
     }
 
     public function setPoziceValues($dbRow)
     {
-        $this->setValues('pozice', $dbRow);
+        $this->setProperties('pozice', $dbRow);
     }
-
-    public function setPrubehValues($dbRow)
-    {
-        $this->setValues('prubeh', $dbRow);
-    }
-
-    private function setValues($prefix, $dbRow)
-    {
-        foreach ($dbRow as $key => $value)
-        {
-            $propertyKey = $prefix . '_' . $key;
-            if (property_exists($this, $propertyKey))
-            {
-                $this->{$propertyKey} = $value;
-            }
-        }
-    }
-
 }

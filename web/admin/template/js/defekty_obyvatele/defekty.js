@@ -502,21 +502,29 @@ $(document).ready(function () {
                     url: window.location.href.replace('action=detail', 'action=save_progress'),
                     data: data,
                     method: "POST"
-                }).done(function ()
+                }).done(function (result)
                 {
-                    // close modal
-                    $("#prubeh-" + dataArray.defekt_id).modal('toggle');
+                    addProgressRow(dataArray['defekt_id'], result);
 
                     // clear form values
                     form.trigger("reset");
-
-                    alert('Průběh byl úspěšně uložen.');
                 }).fail(function ()
                 {
                     alert('Průběh se nepodařilo uložit.');
                 });
             });
         })
+    }
+
+    /**
+     * Adds new row into the table in the modal dialog for defect progress
+     *
+     * @param defectId
+     * @param data
+     */
+    function addProgressRow(defectId, data)
+    {
+        $("table[id=table-progress-" + defectId + "] > tbody:last-child").append("<tr><td>"+data.popis+"</td><td>"+data.status+"</td><td>"+data.datum_vytvoreni+"</td></tr>");
     }
 
     $(document).ready(function () {

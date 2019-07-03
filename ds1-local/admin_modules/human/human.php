@@ -10,8 +10,10 @@ namespace ds1\admin_modules\human;
 
 
 use ds1\admin_modules\human\entity\defect_entity;
+use ds1\admin_modules\human\entity\progress_collection;
+use ds1\admin_modules\human\entity\progress_entity;
 
-class human  extends \ds1\core\ds1_base_model
+class human extends \ds1\core\ds1_base_model
 {
     private function getCurrentDate()
     {
@@ -36,7 +38,7 @@ class human  extends \ds1\core\ds1_base_model
         return $defectId;
     }
 
-    public function getDefectPointsByObyvatelId($obyvatelId)
+    public function getDefectsAndHuman($obyvatelId)
     {
         $where = array($this->DBHelperGetWhereItem("obyvatel_id", $obyvatelId));
         $defectsArray = $this->DBSelectAll(TABLE_HUMAN, "*", $where);
@@ -56,11 +58,11 @@ class human  extends \ds1\core\ds1_base_model
         }
 
         $entities = [];
-        foreach ($defectsArray as $defect){
+        foreach ($defectsArray as $defect)
+        {
             $entity = new defect_entity();
             $entity->setDefectValues($defect);
             $entity->setPoziceValues($positionsArray[$defect['id']]);
-            $entity->setPrubehValues($progressArray[$defect['id']]);
             $entity->setObyvatelValues($obyvatelRow);
 
             $entities[] = $entity;
@@ -112,7 +114,7 @@ class human  extends \ds1\core\ds1_base_model
             $where[] = $this->DBHelperGetWhereItem("datum_konec", NULL, "IS");
         }
 
-        $defectsResults = $this->DBSelectAll(TABLE_HUMAN, "*", $where, "", array(['column' => 'datum_zacatek', 'sort'=> 'asc']));
+        $defectsResults = $this->DBSelectAll(TABLE_HUMAN, "*", $where, "", array(['column' => 'datum_zacatek', 'sort' => 'asc']));
         $obyvateleResults = [];
 
         foreach ($defectsResults as $key => $result)
@@ -149,5 +151,46 @@ class human  extends \ds1\core\ds1_base_model
         );
 
         return $this->DBInsert(TABLE_HUMAN_PROGRESS, $progressArray);
+    }
+
+    public function getDefectsAndProgress($obyvatelId)
+    {
+        $where = array($this->DBHelperGetWhereItem("obyvatel_id", $obyvatelId));
+        $defectsArray = $this->DBSelectAll(TABLE_HUMAN, "*", $where);
+
+        $progressArray = [];
+        foreach ($defectsArray as $defect)
+        {
+            $where = array($this->DBHelperGetWhereItem('defekt_obyvatele_id', $defect['id']));
+            $result = $this->DBSelectAll(TABLE_HUMAN_PROGRESS, "*", $where);
+            if (!empty($result))
+            {
+                $progressArray[$defect['id']] = $result;
+            }
+        }
+
+        $entities = [];
+        foreach ($progressArray as $progress)
+        {
+            foreach ($progress as $row)
+            {
+                $entity = new progress_entity();
+                $entity->setValues($row);
+
+                $entities[] = $entity;
+            }
+        }
+
+        return new progress_collection($entities);
+    }
+
+    public function getProgress($id){
+        $where = array($this->DBHelperGetWhereItem("id", $id));
+        $result = $this->DBSelectOne(TABLE_HUMAN_PROGRESS, "*", $where);
+
+        $entity = new progress_entity();
+        $entity->setValues($result);
+
+        return $entity;
     }
 }

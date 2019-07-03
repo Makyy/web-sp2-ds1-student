@@ -72,6 +72,31 @@
                             echo '<button type="button" class="close" data-dismiss="modal">&times;</button>';
                         echo '</div>';
                         echo '<div class="modal-body">';
+                            echo '<h5>Historie průběhu</h5>';
+                            echo "<table class='table table-sm table-bordered table-striped table-hover' id='table-progress-{$entity->defekt_id}'>";
+                            echo "<thead class='thead-light'>
+                                        <tr>
+                                            <th>popis</th>
+                                            <th>stav</th>
+                                            <th>datum</th>
+                                        </tr>
+                                  </thead><tbody>";
+                            /** @var \ds1\admin_modules\human\entity\progress_collection $progress */
+                            if(isset($progress) && !empty($progressEntities = $progress->getByDefect($entity->defekt_id)))
+                            {
+                                /** @var \ds1\admin_modules\human\entity\progress_entity $progressEntity */
+                                foreach ($progressEntities as $progressEntity)
+                                {
+                                    echo "<tr>
+                                            <td>{$progressEntity->popis}</td>
+                                            <td>{$progressEntity->status}</td>
+                                            <td>{$progressEntity->datum_vytvoreni}</td>
+                                          </tr>";
+                                }
+                            }
+                            echo "</tbody></table>";
+                            echo "<hr>";
+
                             echo '<form class="form" action="' . $form_progress_action . '" method="POST" id="form-progress-' . $entity->defekt_id . '">';
 
                                 echo '<div class="row">';
@@ -100,7 +125,7 @@
 
                                 echo '<div class="row mt-5 pull-right">';
                                     echo '<div class="col-3">';
-                                        echo '<input type="submit" value="Přidat průběh" class="btn btn-primary">';
+                                        echo '<input type="submit" value="Aktualizovat průběh" class="btn btn-primary">';
                                     echo '</div>';
                                 echo '</div>';
 

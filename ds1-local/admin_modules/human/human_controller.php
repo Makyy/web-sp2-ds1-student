@@ -76,7 +76,8 @@ class human_controller extends ds1_base_controller
         // detail obvyatele
         if ($action === "detail")
         {
-            $content_params["entities"] = $human->getDefectPointsByObyvatelId($obyvatelId);
+            $content_params["entities"] = $human->getDefectsAndHuman($obyvatelId);
+            $content_params["progress"] = $human->getDefectsAndProgress($obyvatelId);
             $content_params["name"] = $obyvatel["jmeno"] . " " . $obyvatel["prijmeni"];
             $content_params["form_progress_action"] = $this->makeUrlByRoute($this->route, array('action' => 'save_progress'));
 
@@ -140,7 +141,8 @@ class human_controller extends ds1_base_controller
                 return new JsonResponse("Průběh se nepodařilo uložit.", 500);
             }
 
-            return new JsonResponse();
+            $entity = $human->getProgress($result);
+            return new JsonResponse($entity, 200);
         }
     }
 
