@@ -41,7 +41,7 @@
                                    id="<?php echo $entity->defekt_id ?>"
                                    value="<?php echo $entity->defekt_nazev ?>"
                                    name="def[<?php echo $entity->defekt_id ?>]">
-                            <a class="btn btn-primary btn-sm ml-1" style="padding-top:6px;color: #fafafa" data-toggle="modal" data-target="#prubeh-<?php echo $entity->defekt_id ?>" title="Přidat průběh"><i class="fa fa-fw fa-plus"></i></a>
+                            <a class="btn btn-primary btn-sm ml-1" style="padding-top:6px;color: #fafafa" data-toggle="modal" data-target="#prubeh-<?php echo $entity->defekt_id ?>" title="Přidat průběh"><i class="fa fa-fw fa-search"></i></a>
                             <a class="btn btn-danger btn-sm ml-1" style="padding-top:6px;color: #fafafa" id="delete-<?php echo $entity->defekt_id?>" title="Odstranit defekt"><i class="fa fa-fw fa-times"></i></a>
 
                         </div>
