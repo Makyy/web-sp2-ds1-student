@@ -13,11 +13,16 @@ use ds1\admin_modules\human\entity\defect_entity;
 
 class human  extends \ds1\core\ds1_base_model
 {
+    private function getCurrentDate()
+    {
+        return date("Y-m-d H:i:s");
+    }
+
     public function addDefectPoint($x, $y, $obyvatelId)
     {
         $humanArray = array(
             "obyvatel_id" => $obyvatelId,
-            "datum_zacatek" => date("Y-m-d H:i:s")
+            "datum_zacatek" => $this->getCurrentDate()
         );
         $defectId = $this->DBInsert(TABLE_HUMAN, $humanArray);
 
@@ -34,36 +39,34 @@ class human  extends \ds1\core\ds1_base_model
     public function getDefectPointsByObyvatelId($obyvatelId)
     {
         $where = array($this->DBHelperGetWhereItem("obyvatel_id", $obyvatelId));
-
         $defectsArray = $this->DBSelectAll(TABLE_HUMAN, "*", $where);
 
-        // Assign to associative array by defect ID
-        // instead of:
-        //      array:
-        //          [0] => row
-        //          [1] => row
-        //
-        // it'll be:
-        //      array:
-        //          [id] => row
-        //          [id] => row
-        foreach ($defectsArray as $k => $defect)
-        {
-            $defectsArray[$defect["id"]] = $defect;
-            unset($defectsArray[$k]);
-        }
+        $whereObyvatel = array($this->DBHelperGetWhereItem('id', $obyvatelId));
+        $obyvatelRow = $this->DBSelectOne(TABLE_OBYVATELE, '*', $whereObyvatel);
 
         $positionsArray = [];
+        $progressArray = [];
         foreach ($defectsArray as $defect)
         {
             $where = array($this->DBHelperGetWhereItem('defekt_id', $defect['id']));
-            $positionsArray[] = $this->DBSelectOne(TABLE_HUMAN_POSITION, "*", $where);
+            $positionsArray[$defect['id']] = $this->DBSelectOne(TABLE_HUMAN_POSITION, "*", $where);
+
+            $where = array($this->DBHelperGetWhereItem('defekt_obyvatele_id', $defect['id']));
+            $progressArray[$defect['id']] = $this->DBSelectOne(TABLE_HUMAN_PROGRESS, "*", $where);
         }
 
-        return [
-            'defects' => $defectsArray,
-            'positions' => $positionsArray
-        ];
+        $entities = [];
+        foreach ($defectsArray as $defect){
+            $entity = new defect_entity();
+            $entity->setDefectValues($defect);
+            $entity->setPoziceValues($positionsArray[$defect['id']]);
+            $entity->setPrubehValues($progressArray[$defect['id']]);
+            $entity->setObyvatelValues($obyvatelRow);
+
+            $entities[] = $entity;
+        }
+
+        return $entities;
     }
 
     public function updateDefectName($defectId, $name)
@@ -83,6 +86,12 @@ class human  extends \ds1\core\ds1_base_model
         return $this->DBDelete(TABLE_HUMAN, $where, "");
     }
 
+    /**
+     * Vrací kolekci entit s defekty a informacemi o obyvateli
+     *
+     * @param array $filters : filtrování formulářem, možno podle `datum_zacatek` a `datum_konec`
+     * @return array defect_entity
+     */
     public function getDefectsList($filters = [])
     {
         // Vytvoření where podmínek podle zadaných filtrů
@@ -123,5 +132,22 @@ class human  extends \ds1\core\ds1_base_model
         }
 
         return $defectsCollection;
+    }
+
+    public function addDefectProgress(array $values)
+    {
+        if (!isset($values['defekt_id']))
+        {
+            return FALSE;
+        }
+
+        $progressArray = array(
+            "defekt_obyvatele_id" => $values['defekt_id'],
+            "popis" => $values['popis'],
+            "stav" => $values['stav'],
+            "datum_vytvoreni" => $this->getCurrentDate()
+        );
+
+        return $this->DBInsert(TABLE_HUMAN_PROGRESS, $progressArray);
     }
 }

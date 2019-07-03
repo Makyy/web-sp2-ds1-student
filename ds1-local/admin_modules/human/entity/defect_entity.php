@@ -19,6 +19,7 @@ class defect_entity
     public $defekt_datum_konec;
 
     // Tabulka ds1_obyvatel
+    public $obyvatel_id;
     public $obyvatel_jmeno;
     public $obyvatel_prijmeni;
     public $obyvatel_rodne_prijmeni;
@@ -36,9 +37,29 @@ class defect_entity
     public $obyvatel_op_platnost_do;
     public $obyvatel_stav;
 
+    // Tabulka ds1_defekty_obyvatele_pozice
+    public $pozice_id;
+    public $pozice_defekt_id;
+    public $pozice_souradnice_x;
+    public $pozice_souradnice_y;
+    public $pozice_otoceni_stupnu;
+    public $pozice_zoom;
+    public $pozice_popis;
+    public $pozice_sirka_cm;
+    public $pozice_vyska_cm;
+    public $pozice_barva_text;
+    public $pozice_barva_hex;
+
+    // Tabulka ds1_defekty_obyvatele_prubeh
+    public $prubeh_id;
+    public $prubeh_defekt_obyvatele_id;
+    public $prubeh_popis;
+    public $prubeh_stav;
+    public $prubeh_datum_vytvoreni;
+
     public function setDefectValues($dbRow)
     {
-        $this->setValues("defekt", $dbRow, TRUE);
+        $this->setValues("defekt", $dbRow);
     }
 
     public function setObyvatelValues($dbRow)
@@ -46,17 +67,24 @@ class defect_entity
         $this->setValues("obyvatel", $dbRow);
     }
 
-    private function setValues($prefix, $dbRow, $setId = FALSE)
+    public function setPoziceValues($dbRow)
+    {
+        $this->setValues('pozice', $dbRow);
+    }
+
+    public function setPrubehValues($dbRow)
+    {
+        $this->setValues('prubeh', $dbRow);
+    }
+
+    private function setValues($prefix, $dbRow)
     {
         foreach ($dbRow as $key => $value)
         {
-            if ($key !== 'id' || $setId)
+            $propertyKey = $prefix . '_' . $key;
+            if (property_exists($this, $propertyKey))
             {
-                $propertyKey = $prefix . '_' . $key;
-                if (property_exists($this, $propertyKey))
-                {
-                    $this->{$propertyKey} = $value;
-                }
+                $this->{$propertyKey} = $value;
             }
         }
     }

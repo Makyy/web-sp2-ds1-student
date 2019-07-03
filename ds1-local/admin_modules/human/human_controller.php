@@ -76,8 +76,9 @@ class human_controller extends ds1_base_controller
         // detail obvyatele
         if ($action === "detail")
         {
-            $content_params["defects"] = $human->getDefectPointsByObyvatelId($obyvatelId);
+            $content_params["entities"] = $human->getDefectPointsByObyvatelId($obyvatelId);
             $content_params["name"] = $obyvatel["jmeno"] . " " . $obyvatel["prijmeni"];
+            $content_params["form_progress_action"] = $this->makeUrlByRoute($this->route, array('action' => 'save_progress'));
 
             $content = $this->renderPhp(DS1_DIR_ADMIN_MODULES_FROM_ADMIN . "human/templates/admin_human_detail.inc.php",
                 $content_params,
@@ -127,6 +128,19 @@ class human_controller extends ds1_base_controller
             $result = $human->deleteDefectById($defectId);
 
             return new JsonResponse($result, 200);
+        }
+
+        // uložení informací o průběhu
+        if ($action === "save_progress")
+        {
+            $result = $human->addDefectProgress($_POST);
+
+            if (!$result || $result < 0)
+            {
+                return new JsonResponse("Průběh se nepodařilo uložit.", 500);
+            }
+
+            return new JsonResponse();
         }
     }
 

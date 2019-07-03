@@ -2,7 +2,6 @@
 /**
  *   Detail obyvatele
  */
-
 ?>
     <div class="container-fluid" id="human-defects">
         <div class="col-md-12 row" style="padding-left: 13px">
@@ -16,15 +15,17 @@
 
                 <img class="default-cursor zoom" canaddpoint="false" height="500" id="body-img" originwidth="1645" originheight="4010" src="/admin/template/img/defekty_obyvatel/human-body.jpg" alt="human body" class="img-fluid">
 
-                <?php foreach ($defects['positions'] as $defect) { ?>
-                    <div id="defect-image-group-<?php echo $defect["defekt_id"] ?>">
-                        <div class="hidden-label human-label <?php echo getPointDivClass($defect["souradnice_y"]) ?>"
-                             ratiotop="<?php echo getRatioTop($defect["souradnice_x"]) ?>"
-                             ratioleft="<?php echo getRatioLeft($defect["souradnice_y"]) ?>"
-                             x="<?php echo $defect["souradnice_x"] ?>" y="<?php echo $defect["souradnice_y"] ?>"
+                <?php
+                    /** @var \ds1\admin_modules\human\entity\defect_entity $entity */
+                    foreach ($entities as $entity) { ?>
+                    <div id="defect-image-group-<?php echo $entity->defekt_id ?>">
+                        <div class="hidden-label human-label <?php echo getPointDivClass($entity->pozice_souradnice_y) ?>"
+                             ratiotop="<?php echo getRatioTop($entity->pozice_souradnice_x) ?>"
+                             ratioleft="<?php echo getRatioLeft($entity->pozice_souradnice_y) ?>"
+                             x="<?php echo $entity->pozice_souradnice_x ?>" y="<?php echo $entity->pozice_souradnice_y ?>"
                              style="top:<?php echo $defect["souradnice_x"] ?>px; left:<?php echo $defect["souradnice_y"] ?>px;">
-                            <img src="<?php echo getPointPicture($defect["souradnice_y"]) ?>" alt="defect point">
-                            <label><?php echo getDefectLabel($defects, $defect['defekt_id'])?></label>
+                            <img src="<?php echo getPointPicture($entity->pozice_souradnice_y) ?>" alt="defect point">
+                            <label><?php echo $entity->defekt_nazev ?></label>
                         </div>
                     </div>
                 <?php } ?>
@@ -33,27 +34,83 @@
 
             <div class="col-lg-3 col-md-4 col-sm-12">
                 <form class="form" id="defect-form" method="post" action="<?php echo $form_action ?>">
-                    <?php $i = 1; foreach ($defects['defects'] as $defect) { ?>
-                        <div class="input-group mt-2" id="defect-group-<?php echo $defect["id"]?>">
-                            <label style="align-content: center; width: 20px; text-align: center; padding-top: 6px;" for="<?php echo $defect["id"] ?>"><?php echo $i . "."; $i++; ?></label>
+                    <?php $i = 1; foreach ($entities as $entity) { ?>
+                        <div class="input-group mt-2" id="defect-group-<?php echo $entity->defekt_id?>">
+                            <label style="align-content: center; width: 20px; text-align: center; padding-top: 6px;" for="<?php echo $entity->defekt_id ?>"><?php echo $i . "."; $i++; ?></label>
                             <input type="text" class="form-control point-tb"
-                                   id="<?php echo $defect["id"] ?>"
-                                   value="<?php echo $defect["nazev"] ?>"
-                                   name="def[<?php echo $defect["id"] ?>]">
-                            <a class="btn btn-danger btn-sm ml-1" style="padding-top:6px;color: #fafafa" id="delete-<?php echo $defect["id"]?>"><i class="fa fa-fw fa-times"></i></a>
+                                   id="<?php echo $entity->defekt_id ?>"
+                                   value="<?php echo $entity->defekt_nazev ?>"
+                                   name="def[<?php echo $entity->defekt_id ?>]">
+                            <a class="btn btn-primary btn-sm ml-1" style="padding-top:6px;color: #fafafa" data-toggle="modal" data-target="#prubeh-<?php echo $entity->defekt_id ?>" title="Přidat průběh"><i class="fa fa-fw fa-plus"></i></a>
+                            <a class="btn btn-danger btn-sm ml-1" style="padding-top:6px;color: #fafafa" id="delete-<?php echo $entity->defekt_id?>" title="Odstranit defekt"><i class="fa fa-fw fa-times"></i></a>
 
                         </div>
                     <?php } ?>
                     <?php
-                        $display = count($defects['defects']) > 0 ? '' : 'display: none;';
+                        $display = count($entities) > 0 ? '' : 'display: none;';
                     echo '<input type="submit" class="btn btn-primary form-control mt-2" value="Uložit" title="Uložit změny" style="' . $display . '">'
                     ?>
 
                 </form>
-            </div>
         </div>
 
         <br/>
+
+        <?php
+        /**
+         * Formulář pro přidávání průběhu k defektu
+         */
+
+        /** @var \ds1\admin_modules\human\entity\defect_entity $entity */
+        foreach ($entities as $entity)
+        {
+            echo '<div class="modal" id="prubeh-' . $entity->defekt_id . '">';
+                echo '<div class="modal-dialog">';
+                    echo '<div class="modal-content">';
+                        echo '<div class="modal-header">';
+                            echo '<h4 class="modal-title">Průběh defektu "'. $entity->defekt_nazev .'"</h4>';
+                            echo '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+                        echo '</div>';
+                        echo '<div class="modal-body">';
+                            echo '<form class="form" action="' . $form_progress_action . '" method="POST" id="form-progress-' . $entity->defekt_id . '">';
+
+                                echo '<div class="row">';
+                                        echo '<div class="col-3">';
+                                            echo '<label style="padding-top: 6px;" for="popis">Popis</label>';
+                                        echo '</div>';
+                                        echo '<div class="col-9">';
+                                            echo '<input class="form-control" type="text" name="popis">';
+                                        echo '</div>';
+                                echo '</div>';
+
+                                echo '<div class="row mt-2">';
+                                    echo '<div class="col-3">';
+                                        echo '<label style="padding-top: 6px;" for="stav">Stav</label>';
+                                    echo '</div>';
+                                    echo '<div class="col-9">';
+                                        echo '<select class="form-control" name="stav">';
+                                            echo '<option value="0">stejný</option>';
+                                            echo '<option value="1">zlepšení</option>';
+                                            echo '<option value="2">zhoršení</option>';
+                                        echo '</select>';
+                                    echo '</div>';
+                                echo '</div>';
+
+                                echo '<input type="hidden" name="defekt_id" value="' . $entity->defekt_id . '">';
+
+                                echo '<div class="row mt-5 pull-right">';
+                                    echo '<div class="col-3">';
+                                        echo '<input type="submit" value="Přidat průběh" class="btn btn-primary">';
+                                    echo '</div>';
+                                echo '</div>';
+
+                            echo '</form>';
+                        echo '</div>';
+                    echo '</div>';
+                echo '</div>';
+            echo '</div>';
+        }
+        ?>
     </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -105,10 +162,6 @@
         else{
             return "/admin/template/img/defekty_obyvatel/path-top-right.png";
         }
-    }
-
-    function getDefectLabel($defects, $defectId){
-        return $defects['defects'][$defectId]["nazev"];
     }
 
 ?>

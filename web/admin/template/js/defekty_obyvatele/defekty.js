@@ -478,6 +478,47 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Handles submitting of the progress form by AJAX
+     */
+    function handleSubmitProgressForm()
+    {
+        $("form[id^=form-progress]").each(function ()
+        {
+            $(this).submit(function (e)
+            {
+                e.preventDefault();
+
+                let data = $(this).serialize();
+                let dataArray = {};
+                let form = $(this);
+
+                $($(this).serializeArray()).each(function (i, field)
+                {
+                    dataArray[field.name] = field.value;
+                });
+
+                $.ajax({
+                    url: window.location.href.replace('action=detail', 'action=save_progress'),
+                    data: data,
+                    method: "POST"
+                }).done(function ()
+                {
+                    // close modal
+                    $("#prubeh-" + dataArray.defekt_id).modal('toggle');
+
+                    // clear form values
+                    form.trigger("reset");
+
+                    alert('Průběh byl úspěšně uložen.');
+                }).fail(function ()
+                {
+                    alert('Průběh se nepodařilo uložit.');
+                });
+            });
+        })
+    }
+
     $(document).ready(function () {
         $("#human-defects .human-label").each(function () {
             $(this).removeClass("hidden-label");
@@ -487,6 +528,8 @@ $(document).ready(function () {
         registerRemoveOnclickHandler(null); // register on click - delete defect
 
         movePoints();  // adjust points to actual image size
+
+        handleSubmitProgressForm();
     });
 
     // define resize event that calls points adjusting to actual image size.
