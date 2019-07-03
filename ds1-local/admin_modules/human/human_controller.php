@@ -110,7 +110,7 @@ class human_controller extends ds1_base_controller
                 $human->updateDefectName($key, $value);
             }
 
-            $this->redirectUser($this->makeUrlByRoute($this->route, array("obyvatel_id" => $obyvatelId)));
+            $this->redirectUser($this->makeUrlByRoute($this->route, array("obyvatel_id" => $obyvatelId, "action" => 'detail')));
         }
 
         // odstranění defektu z DB

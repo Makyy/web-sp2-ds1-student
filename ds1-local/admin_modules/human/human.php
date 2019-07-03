@@ -16,7 +16,8 @@ class human  extends \ds1\core\ds1_base_model
     public function addDefectPoint($x, $y, $obyvatelId)
     {
         $humanArray = array(
-            "obyvatel_id" => $obyvatelId
+            "obyvatel_id" => $obyvatelId,
+            "datum_zacatek" => date("Y-m-d H:i:s")
         );
         $defectId = $this->DBInsert(TABLE_HUMAN, $humanArray);
 
