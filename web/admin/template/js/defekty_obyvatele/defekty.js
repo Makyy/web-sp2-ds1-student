@@ -575,11 +575,21 @@ $(document).ready(function () {
                                         html += '<label style="padding-top: 6px;" for="stav">Stav</label>';
                                     html += '</div>';
                                     html += '<div class="col-9">';
-                                        html += '<select class="form-control" name="stav">';
+                                        html += '<select class="form-control" name="stav" required="required">';
+                                            html += '<option value="" disabled selected="selected">-- vyberte stav --</option>';
                                             html += '<option value="0">stejný</option>';
                                             html += '<option value="1">zlepšení</option>';
                                             html += '<option value="2">zhoršení</option>';
                                         html += '</select>';
+                                    html += '</div>';
+                                html += '</div>';
+
+                                html += '<div class="row mt-2">';
+                                    html += '<div class="col-3">';
+                                        html += '<label style="padding-top: 6px;" for="datum_vytvoreni">Datum</label>';
+                                    html += '</div>';
+                                    html += '<div class="col-9">';
+                                        html += '<input class="form-control" type="date" name="datum_vytvoreni">';
                                     html += '</div>';
                                 html += '</div>';
 

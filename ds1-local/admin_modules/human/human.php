@@ -147,7 +147,7 @@ class human extends \ds1\core\ds1_base_model
             "defekt_obyvatele_id" => $values['defekt_id'],
             "popis" => $values['popis'],
             "stav" => $values['stav'],
-            "datum_vytvoreni" => $this->getCurrentDate()
+            "datum_vytvoreni" => !empty($values['datum_vytvoreni']) ? $values['datum_vytvoreni'] : $this->getCurrentDate()
         );
 
         return $this->DBInsert(TABLE_HUMAN_PROGRESS, $progressArray);
@@ -162,7 +162,7 @@ class human extends \ds1\core\ds1_base_model
         foreach ($defectsArray as $defect)
         {
             $where = array($this->DBHelperGetWhereItem('defekt_obyvatele_id', $defect['id']));
-            $result = $this->DBSelectAll(TABLE_HUMAN_PROGRESS, "*", $where);
+            $result = $this->DBSelectAll(TABLE_HUMAN_PROGRESS, "*", $where, "", array(['column' => 'datum_vytvoreni', 'sort' => 'asc']));
             if (!empty($result))
             {
                 $progressArray[$defect['id']] = $result;

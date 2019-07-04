@@ -113,11 +113,21 @@
                                             echo '<label style="padding-top: 6px;" for="stav">Stav</label>';
                                         echo '</div>';
                                         echo '<div class="col-9">';
-                                            echo '<select class="form-control" name="stav">';
+                                            echo '<select class="form-control" name="stav" required="required">';
+                                                echo '<option value="" disabled selected="selected">-- vyberte stav --</option>';
                                                 echo '<option value="0">stejný</option>';
                                                 echo '<option value="1">zlepšení</option>';
                                                 echo '<option value="2">zhoršení</option>';
                                             echo '</select>';
+                                        echo '</div>';
+                                    echo '</div>';
+
+                                    echo '<div class="row mt-2">';
+                                        echo '<div class="col-3">';
+                                            echo '<label style="padding-top: 6px;" for="datum_vytvoreni">Datum</label>';
+                                        echo '</div>';
+                                        echo '<div class="col-9">';
+                                            echo '<input class="form-control" type="date" name="datum_vytvoreni">';
                                         echo '</div>';
                                     echo '</div>';
 
