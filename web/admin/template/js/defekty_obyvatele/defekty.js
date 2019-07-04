@@ -644,7 +644,7 @@ $(document).ready(function () {
                                             html += '<label style="padding-top: 6px;" for="sirka_cm">Šířka (cm)</label>';
                                         html += '</div>';
                                         html += '<div class="col-9">';
-                                            html += '<input class="form-control" type="text" name="sirka_cm">';
+                                            html += '<input class="form-control" type="number" min="0" max="250" name="sirka_cm">';
                                         html += '</div>';
                                     html += '</div>';
 
@@ -653,7 +653,7 @@ $(document).ready(function () {
                                            html += '<label style="padding-top: 6px;" for="vyska_cm">Výška (cm)</label>';
                                         html += '</div>';
                                         html += '<div class="col-9">';
-                                          html += '<input class="form-control" type="text" name="vyska_cm">';
+                                          html += '<input class="form-control" type="number" min="0" max="250" name="vyska_cm">';
                                         html += '</div>';
                                     html += '</div>';
 

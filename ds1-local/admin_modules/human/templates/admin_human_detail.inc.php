@@ -152,7 +152,7 @@
                                                 echo '<label style="padding-top: 6px;" for="sirka_cm">Šířka (cm)</label>';
                                             echo '</div>';
                                             echo '<div class="col-9">';
-                                                echo '<input class="form-control" type="text" name="sirka_cm" value="'. $entity->pozice_sirka_cm .'">';
+                                                echo '<input class="form-control" type="number" min="0" max="250" name="sirka_cm" value="'. $entity->pozice_sirka_cm .'">';
                                             echo '</div>';
                                         echo '</div>';
 
@@ -161,7 +161,7 @@
                                                 echo '<label style="padding-top: 6px;" for="vyska_cm">Výška (cm)</label>';
                                             echo '</div>';
                                             echo '<div class="col-9">';
-                                                echo '<input class="form-control" type="text" name="vyska_cm" value="'. $entity->pozice_vyska_cm .'">';
+                                                echo '<input class="form-control" type="number" min="0" max="250" name="vyska_cm" value="'. $entity->pozice_vyska_cm .'">';
                                             echo '</div>';
                                         echo '</div>';
 
