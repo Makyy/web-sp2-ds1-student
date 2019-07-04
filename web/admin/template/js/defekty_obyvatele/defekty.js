@@ -1,3 +1,5 @@
+const FORM_PROGRESS_ACTION_URL = "/admin/index.php/plugin/human?action=save_progress";
+
 /**
  * Returns top position on given image of given click event.
  * @param img image
@@ -352,9 +354,11 @@ $(document).ready(function () {
 
         showFormSaveButton();
 
-        form.find("input:submit").before('<div class="input-group mt-2" id="defect-group-'+id+'"><label style="align-content: center; width: 20px; text-align: center; padding-top: 6px;"  for="' + id + '">' + len + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"><a class="btn btn-danger btn-sm ml-1" style="padding-top:6px;color: #fafafa" id="delete-'+ id +'"><i class="fa fa-fw fa-times"></i></a></div>');
+        form.find("input:submit").before('<div class="input-group mt-2" id="defect-group-'+id+'"><label style="align-content: center; width: 20px; text-align: center; padding-top: 6px;"  for="' + id + '">' + len + '.</label> <input type="text" class="form-control" name="def[' + id + ']" value="DEFECT"><a class="btn btn-primary btn-sm ml-1" style="padding-top:6px;color: #fafafa" data-toggle="modal" data-target="#prubeh-'+ id +'" title="Přidat průběh"><i class="fa fa-fw fa-search"></i></a><a class="btn btn-danger btn-sm ml-1" style="padding-top:6px;color: #fafafa" id="delete-'+ id +'"><i class="fa fa-fw fa-times"></i></a></div>');
 
         registerRemoveOnclickHandler(id);
+
+        addProgressModal(id);
     }
 
     /**
@@ -527,6 +531,76 @@ $(document).ready(function () {
         $("table[id=table-progress-" + defectId + "] > tbody:last-child").append("<tr><td>"+data.popis+"</td><td>"+data.status+"</td><td>"+data.datum_vytvoreni+"</td></tr>");
     }
 
+    /**
+     * Function adds new modal form for defect progress
+     *
+     * @param defectId
+     */
+    function addProgressModal(defectId)
+    {
+        let html = '<div class="modal" id="prubeh-' + defectId + '">';
+                html += '<div class="modal-dialog">';
+                    html += '<div class="modal-content">';
+                        html += '<div class="modal-header">';
+                            html += '<h4 class="modal-title">Průběh defektu</h4>';
+                            html += '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+                        html += '</div>';
+                        html += '<div class="modal-body">';
+                            html += '<table class="table table-sm table-bordered table-striped table-hover" id="table-progress-' + defectId + '">';
+                                html += '<thead class="thead-light">';
+                                    html += '<tr>';
+                                        html += '<th>popis</th>';
+                                        html += '<th>stav</th>';
+                                        html += '<th>datum</th>';
+                                    html += '</tr>';
+                                html += '</thead>';
+                                html += '<tbody>';
+                                html += '</tbody>';
+                            html += '</table>';
+
+                            html += '</hr>';
+
+                            html += '<form class="form" action="' + FORM_PROGRESS_ACTION_URL + '" method="POST" id="form-progress-' + defectId + '">';
+                                html += '<div class="row">';
+                                    html += '<div class="col-3">';
+                                        html += '<label style="padding-top: 6px;" for="popis">Popis</label>';
+                                    html += '</div>';
+                                    html += '<div class="col-9">';
+                                        html += '<input class="form-control" type="text" name="popis">';
+                                    html += '</div>';
+                                html += '</div>';
+
+                                html += '<div class="row mt-2">';
+                                    html += '<div class="col-3">';
+                                        html += '<label style="padding-top: 6px;" for="stav">Stav</label>';
+                                    html += '</div>';
+                                    html += '<div class="col-9">';
+                                        html += '<select class="form-control" name="stav">';
+                                            html += '<option value="0">stejný</option>';
+                                            html += '<option value="1">zlepšení</option>';
+                                            html += '<option value="2">zhoršení</option>';
+                                        html += '</select>';
+                                    html += '</div>';
+                                html += '</div>';
+
+                                html += '<input type="hidden" name="defekt_id" value="' + defectId + '">';
+
+                                html += '<div class="row mt-5 pull-right">';
+                                    html += '<div class="col-3">';
+                                        html += '<input type="submit" value="Aktualizovat průběh" class="btn btn-primary">';
+                                    html += '</div>';
+                                html += '</div>';
+
+                            html += '</form>';
+                        html += '</div>';
+                    html += '</div>';
+                html += '</div>';
+            html += '</div>';
+
+        $("#progress-modals").append(html);
+        handleSubmitProgressForm();
+    }
+
     $(document).ready(function () {
         $("#human-defects .human-label").each(function () {
             $(this).removeClass("hidden-label");
@@ -537,7 +611,7 @@ $(document).ready(function () {
 
         movePoints();  // adjust points to actual image size
 
-        handleSubmitProgressForm();
+        handleSubmitProgressForm(); // prevent default, send by AJAX
     });
 
     // define resize event that calls points adjusting to actual image size.

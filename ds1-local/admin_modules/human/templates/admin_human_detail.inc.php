@@ -54,88 +54,89 @@
                 </form>
         </div>
 
-        <br/>
+        <div id="progress-modals">
 
-        <?php
-        /**
-         * Formulář pro přidávání průběhu k defektu
-         */
+            <?php
+            /**
+             * Formulář pro přidávání průběhu k defektu
+             */
 
-        /** @var \ds1\admin_modules\human\entity\defect_entity $entity */
-        foreach ($entities as $entity)
-        {
-            echo '<div class="modal" id="prubeh-' . $entity->defekt_id . '">';
-                echo '<div class="modal-dialog">';
-                    echo '<div class="modal-content">';
-                        echo '<div class="modal-header">';
-                            echo '<h4 class="modal-title">Průběh defektu "'. $entity->defekt_nazev .'"</h4>';
-                            echo '<button type="button" class="close" data-dismiss="modal">&times;</button>';
-                        echo '</div>';
-                        echo '<div class="modal-body">';
-                            echo '<h5>Historie průběhu</h5>';
-                            echo "<table class='table table-sm table-bordered table-striped table-hover' id='table-progress-{$entity->defekt_id}'>";
-                            echo "<thead class='thead-light'>
-                                        <tr>
-                                            <th>popis</th>
-                                            <th>stav</th>
-                                            <th>datum</th>
-                                        </tr>
-                                  </thead><tbody>";
-                            /** @var \ds1\admin_modules\human\entity\progress_collection $progress */
-                            if(isset($progress) && !empty($progressEntities = $progress->getByDefect($entity->defekt_id)))
-                            {
-                                /** @var \ds1\admin_modules\human\entity\progress_entity $progressEntity */
-                                foreach ($progressEntities as $progressEntity)
+            /** @var \ds1\admin_modules\human\entity\defect_entity $entity */
+            foreach ($entities as $entity)
+            {
+                echo '<div class="modal" id="prubeh-' . $entity->defekt_id . '">';
+                    echo '<div class="modal-dialog">';
+                        echo '<div class="modal-content">';
+                            echo '<div class="modal-header">';
+                                echo '<h4 class="modal-title">Průběh defektu "'. $entity->defekt_nazev .'"</h4>';
+                                echo '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+                            echo '</div>';
+                            echo '<div class="modal-body">';
+                                echo '<h5>Historie průběhu</h5>';
+                                echo "<table class='table table-sm table-bordered table-striped table-hover' id='table-progress-{$entity->defekt_id}'>";
+                                echo "<thead class='thead-light'>
+                                            <tr>
+                                                <th>popis</th>
+                                                <th>stav</th>
+                                                <th>datum</th>
+                                            </tr>
+                                      </thead><tbody>";
+                                /** @var \ds1\admin_modules\human\entity\progress_collection $progress */
+                                if(isset($progress) && !empty($progressEntities = $progress->getByDefect($entity->defekt_id)))
                                 {
-                                    echo "<tr>
-                                            <td>{$progressEntity->popis}</td>
-                                            <td>{$progressEntity->status}</td>
-                                            <td>{$progressEntity->datum_vytvoreni}</td>
-                                          </tr>";
+                                    /** @var \ds1\admin_modules\human\entity\progress_entity $progressEntity */
+                                    foreach ($progressEntities as $progressEntity)
+                                    {
+                                        echo "<tr>
+                                                <td>{$progressEntity->popis}</td>
+                                                <td>{$progressEntity->status}</td>
+                                                <td>{$progressEntity->datum_vytvoreni}</td>
+                                              </tr>";
+                                    }
                                 }
-                            }
-                            echo "</tbody></table>";
-                            echo "<hr>";
+                                echo "</tbody></table>";
+                                echo "<hr>";
 
-                            echo '<form class="form" action="' . $form_progress_action . '" method="POST" id="form-progress-' . $entity->defekt_id . '">';
+                                echo '<form class="form" action="' . $form_progress_action . '" method="POST" id="form-progress-' . $entity->defekt_id . '">';
 
-                                echo '<div class="row">';
+                                    echo '<div class="row">';
+                                            echo '<div class="col-3">';
+                                                echo '<label style="padding-top: 6px;" for="popis">Popis</label>';
+                                            echo '</div>';
+                                            echo '<div class="col-9">';
+                                                echo '<input class="form-control" type="text" name="popis">';
+                                            echo '</div>';
+                                    echo '</div>';
+
+                                    echo '<div class="row mt-2">';
                                         echo '<div class="col-3">';
-                                            echo '<label style="padding-top: 6px;" for="popis">Popis</label>';
+                                            echo '<label style="padding-top: 6px;" for="stav">Stav</label>';
                                         echo '</div>';
                                         echo '<div class="col-9">';
-                                            echo '<input class="form-control" type="text" name="popis">';
+                                            echo '<select class="form-control" name="stav">';
+                                                echo '<option value="0">stejný</option>';
+                                                echo '<option value="1">zlepšení</option>';
+                                                echo '<option value="2">zhoršení</option>';
+                                            echo '</select>';
                                         echo '</div>';
-                                echo '</div>';
-
-                                echo '<div class="row mt-2">';
-                                    echo '<div class="col-3">';
-                                        echo '<label style="padding-top: 6px;" for="stav">Stav</label>';
                                     echo '</div>';
-                                    echo '<div class="col-9">';
-                                        echo '<select class="form-control" name="stav">';
-                                            echo '<option value="0">stejný</option>';
-                                            echo '<option value="1">zlepšení</option>';
-                                            echo '<option value="2">zhoršení</option>';
-                                        echo '</select>';
+
+                                    echo '<input type="hidden" name="defekt_id" value="' . $entity->defekt_id . '">';
+
+                                    echo '<div class="row mt-5 pull-right">';
+                                        echo '<div class="col-3">';
+                                            echo '<input type="submit" value="Aktualizovat průběh" class="btn btn-primary">';
+                                        echo '</div>';
                                     echo '</div>';
-                                echo '</div>';
 
-                                echo '<input type="hidden" name="defekt_id" value="' . $entity->defekt_id . '">';
-
-                                echo '<div class="row mt-5 pull-right">';
-                                    echo '<div class="col-3">';
-                                        echo '<input type="submit" value="Aktualizovat průběh" class="btn btn-primary">';
-                                    echo '</div>';
-                                echo '</div>';
-
-                            echo '</form>';
+                                echo '</form>';
+                            echo '</div>';
                         echo '</div>';
                     echo '</div>';
                 echo '</div>';
-            echo '</div>';
-        }
-        ?>
+            }
+            ?>
+        </div>
     </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
