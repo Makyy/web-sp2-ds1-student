@@ -68,7 +68,7 @@
                     echo '<div class="modal-dialog">';
                         echo '<div class="modal-content">';
                             echo '<div class="modal-header">';
-                                echo '<h4 class="modal-title">Průběh defektu "'. $entity->defekt_nazev .'"</h4>';
+                                echo '<h4 class="modal-title">Detail defektu "'. $entity->defekt_nazev .'"</h4>';
                                 echo '<button type="button" class="close" data-dismiss="modal">&times;</button>';
                             echo '</div>';
                             echo '<div class="modal-body">';
@@ -108,7 +108,7 @@
                                             echo '</div>';
                                     echo '</div>';
 
-                                    echo '<div class="row mt-2">';
+                                    echo '<div class="row mt-1">';
                                         echo '<div class="col-3">';
                                             echo '<label style="padding-top: 6px;" for="stav">Stav</label>';
                                         echo '</div>';
@@ -122,7 +122,7 @@
                                         echo '</div>';
                                     echo '</div>';
 
-                                    echo '<div class="row mt-2">';
+                                    echo '<div class="row mt-1">';
                                         echo '<div class="col-3">';
                                             echo '<label style="padding-top: 6px;" for="datum_vytvoreni">Datum</label>';
                                         echo '</div>';
@@ -133,13 +133,66 @@
 
                                     echo '<input type="hidden" name="defekt_id" value="' . $entity->defekt_id . '">';
 
-                                    echo '<div class="row mt-5 pull-right">';
+                                    echo '<div class="row mt-4">';
                                         echo '<div class="col-3">';
                                             echo '<input type="submit" value="Aktualizovat průběh" class="btn btn-primary">';
                                         echo '</div>';
                                     echo '</div>';
 
                                 echo '</form>';
+
+                                echo '<hr>';
+
+                                echo '<div class="mt-2"><h5>Popis defektu</h5>';
+
+                                    echo '<form class="form" action="' . $form_detail_action . '" method="POST" id="form-detail-' . $entity->defekt_id . '">';
+
+                                        echo '<div class="row">';
+                                            echo '<div class="col-3">';
+                                                echo '<label style="padding-top: 6px;" for="sirka_cm">Šířka (cm)</label>';
+                                            echo '</div>';
+                                            echo '<div class="col-9">';
+                                                echo '<input class="form-control" type="text" name="sirka_cm" value="'. $entity->pozice_sirka_cm .'">';
+                                            echo '</div>';
+                                        echo '</div>';
+
+                                        echo '<div class="row mt-1">';
+                                            echo '<div class="col-3">';
+                                                echo '<label style="padding-top: 6px;" for="vyska_cm">Výška (cm)</label>';
+                                            echo '</div>';
+                                            echo '<div class="col-9">';
+                                                echo '<input class="form-control" type="text" name="vyska_cm" value="'. $entity->pozice_vyska_cm .'">';
+                                            echo '</div>';
+                                        echo '</div>';
+
+                                        echo '<div class="row mt-1">';
+                                            echo '<div class="col-3">';
+                                                echo '<label style="padding-top: 6px;" for="barva_text">Barva</label>';
+                                            echo '</div>';
+                                            echo '<div class="col-9">';
+                                                echo '<input class="form-control" type="text" name="barva_text" value="'. $entity->pozice_barva_text .'">';
+                                            echo '</div>';
+                                        echo '</div>';
+
+                                        echo '<div class="row mt-1">';
+                                            echo '<div class="col-3">';
+                                                echo '<label style="padding-top: 6px;" for="barva_hex">Barva Hex</label>';
+                                            echo '</div>';
+                                            echo '<div class="col-9">';
+                                                echo '<input class="form-control" type="color" name="barva_hex" value="'. $entity->pozice_barva_hex .'">';
+                                            echo '</div>';
+                                        echo '</div>';
+
+                                        echo '<input type="hidden" name="defekt_id" value="' . $entity->defekt_id . '">';
+
+                                        echo '<div class="row mt-4">';
+                                            echo '<div class="col-3">';
+                                                echo '<input type="submit" value="Aktualizovat detail" class="btn btn-primary">';
+                                            echo '</div>';
+                                        echo '</div>';
+
+                                    echo '</form>';
+                                echo '</div>';
                             echo '</div>';
                         echo '</div>';
                     echo '</div>';

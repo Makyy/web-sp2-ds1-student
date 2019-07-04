@@ -1,4 +1,5 @@
 const FORM_PROGRESS_ACTION_URL = "/admin/index.php/plugin/human?action=save_progress";
+const FORM_DETAIL_ACTION_URL = "/admin/index.php/plugin/human?action=save_detail";
 
 /**
  * Returns top position on given image of given click event.
@@ -487,7 +488,31 @@ $(document).ready(function () {
      */
     function handleSubmitProgressForm()
     {
-        $("form[id^=form-progress]").each(function ()
+        handleSubmitForm("form-progress", "save_progress", addProgressRow, true);
+    }
+
+    /**
+     * Handles submitting of the detail form by AJAX
+     */
+    function handleSubmitDetailForm()
+    {
+        let successCallback = (defectId, data) =>
+        {
+            alert('Detail byl úspěšně uložen.');
+        };
+
+        handleSubmitForm("form-detail", "save_detail", successCallback, false);
+    }
+
+    /**
+     * @param id string : HTML ID of the form
+     * @param action string : form action
+     * @param successCallback callback: callback with params: defect ID, ajax result
+     * @param clearForm bool : do we want to clear form values after submit
+     */
+    function handleSubmitForm(id, action, successCallback, clearForm = false)
+    {
+        $("form[id^=" + id + "]").each(function ()
         {
             $(this).submit(function (e)
             {
@@ -503,18 +528,23 @@ $(document).ready(function () {
                 });
 
                 $.ajax({
-                    url: window.location.href.replace('action=detail', 'action=save_progress'),
+                    url: window.location.href.replace('action=detail', 'action=' + action),
                     data: data,
                     method: "POST"
                 }).done(function (result)
                 {
-                    addProgressRow(dataArray['defekt_id'], result);
+                    if(successCallback)
+                    {
+                        successCallback(dataArray['defekt_id'], result);
+                    }
 
-                    // clear form values
-                    form.trigger("reset");
+                    if(clearForm)
+                    {
+                        form.trigger("reset");
+                    }
                 }).fail(function ()
                 {
-                    alert('Průběh se nepodařilo uložit.');
+                    alert('Při ukládání došlo k chybě.');
                 });
             });
         })
@@ -542,7 +572,7 @@ $(document).ready(function () {
                 html += '<div class="modal-dialog">';
                     html += '<div class="modal-content">';
                         html += '<div class="modal-header">';
-                            html += '<h4 class="modal-title">Průběh defektu</h4>';
+                            html += '<h4 class="modal-title">Detail defektu</h4>';
                             html += '<button type="button" class="close" data-dismiss="modal">&times;</button>';
                         html += '</div>';
                         html += '<div class="modal-body">';
@@ -570,7 +600,7 @@ $(document).ready(function () {
                                     html += '</div>';
                                 html += '</div>';
 
-                                html += '<div class="row mt-2">';
+                                html += '<div class="row mt-1">';
                                     html += '<div class="col-3">';
                                         html += '<label style="padding-top: 6px;" for="stav">Stav</label>';
                                     html += '</div>';
@@ -584,7 +614,7 @@ $(document).ready(function () {
                                     html += '</div>';
                                 html += '</div>';
 
-                                html += '<div class="row mt-2">';
+                                html += '<div class="row mt-1">';
                                     html += '<div class="col-3">';
                                         html += '<label style="padding-top: 6px;" for="datum_vytvoreni">Datum</label>';
                                     html += '</div>';
@@ -595,13 +625,66 @@ $(document).ready(function () {
 
                                 html += '<input type="hidden" name="defekt_id" value="' + defectId + '">';
 
-                                html += '<div class="row mt-5 pull-right">';
+                                html += '<div class="row mt-4">';
                                     html += '<div class="col-3">';
                                         html += '<input type="submit" value="Aktualizovat průběh" class="btn btn-primary">';
                                     html += '</div>';
                                 html += '</div>';
 
                             html += '</form>';
+
+
+                            html += '<hr>';
+
+                            html += '<div class="mt-2"><h5>Popis defektu</h5>';
+                                html += '<form class="form" action="' +FORM_DETAIL_ACTION_URL+ '" method="POST" id="form-detail-' + defectId +'">';
+
+                                    html += '<div class="row">';
+                                        html += '<div class="col-3">';
+                                            html += '<label style="padding-top: 6px;" for="sirka_cm">Šířka (cm)</label>';
+                                        html += '</div>';
+                                        html += '<div class="col-9">';
+                                            html += '<input class="form-control" type="text" name="sirka_cm">';
+                                        html += '</div>';
+                                    html += '</div>';
+
+                                    html += '<div class="row mt-1">';
+                                        html += '<div class="col-3">';
+                                           html += '<label style="padding-top: 6px;" for="vyska_cm">Výška (cm)</label>';
+                                        html += '</div>';
+                                        html += '<div class="col-9">';
+                                          html += '<input class="form-control" type="text" name="vyska_cm">';
+                                        html += '</div>';
+                                    html += '</div>';
+
+                                    html += '<div class="row mt-1">';
+                                        html += '<div class="col-3">';
+                                            html += '<label style="padding-top: 6px;" for="barva_text">Barva</label>';
+                                        html += '</div>';
+                                        html += '<div class="col-9">';
+                                            html += '<input class="form-control" type="text" name="barva_text">';
+                                        html += '</div>';
+                                    html += '</div>';
+
+                                    html += '<div class="row mt-1">';
+                                        html += '<div class="col-3">';
+                                            html += '<label style="padding-top: 6px;" for="barva_hex">Barva Hex</label>';
+                                        html += '</div>';
+                                        html += '<div class="col-9">';
+                                            html += '<input class="form-control" type="color" name="barva_hex">';
+                                        html += '</div>';
+                                    html += '</div>';
+
+                                    html += '<input type="hidden" name="defekt_id" value="' + defectId + '">';
+
+                                    html += '<div class="row mt-4">';
+                                        html += '<div class="col-3">';
+                                            html += '<input type="submit" value="Aktualizovat detail" class="btn btn-primary">';
+                                        html += '</div>';
+                                    html += '</div>';
+                                html += '</form>';
+                            html += '</div>';
+
                         html += '</div>';
                     html += '</div>';
                 html += '</div>';
@@ -609,6 +692,7 @@ $(document).ready(function () {
 
         $("#progress-modals").append(html);
         handleSubmitProgressForm();
+        handleSubmitDetailForm();
     }
 
     $(document).ready(function () {
@@ -621,7 +705,8 @@ $(document).ready(function () {
 
         movePoints();  // adjust points to actual image size
 
-        handleSubmitProgressForm(); // prevent default, send by AJAX
+        handleSubmitProgressForm();
+        handleSubmitDetailForm();
     });
 
     // define resize event that calls points adjusting to actual image size.

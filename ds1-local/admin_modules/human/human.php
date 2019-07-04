@@ -81,6 +81,9 @@ class human extends \ds1\core\ds1_base_model
 
     public function deleteDefectById($defectId)
     {
+        $where = array($this->DBHelperGetWhereItem("defekt_obyvatele_id", $defectId));
+        $this->DBDelete(TABLE_HUMAN_PROGRESS, $where, "");
+
         $where = array($this->DBHelperGetWhereItem("defekt_id", $defectId));
         $this->DBDelete(TABLE_HUMAN_POSITION, $where, "");
 
@@ -184,7 +187,8 @@ class human extends \ds1\core\ds1_base_model
         return new progress_collection($entities);
     }
 
-    public function getProgress($id){
+    public function getProgress($id)
+    {
         $where = array($this->DBHelperGetWhereItem("id", $id));
         $result = $this->DBSelectOne(TABLE_HUMAN_PROGRESS, "*", $where);
 
@@ -192,5 +196,24 @@ class human extends \ds1\core\ds1_base_model
         $entity->setValues($result);
 
         return $entity;
+    }
+
+    public function updateDefectDetail($values)
+    {
+        if (!isset($values['defekt_id']))
+        {
+            return FALSE;
+        }
+
+        $data = array(
+            "sirka_cm" => $values["sirka_cm"],
+            "vyska_cm" => $values["vyska_cm"],
+            "barva_text" => $values["barva_text"],
+            "barva_hex" => $values["barva_hex"]
+        );
+
+        $where = array($this->DBHelperGetWhereItem("defekt_id", $values['defekt_id']));
+
+        return $this->DBUpdate(TABLE_HUMAN_POSITION, $where, $data);
     }
 }

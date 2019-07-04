@@ -80,6 +80,7 @@ class human_controller extends ds1_base_controller
             $content_params["progress"] = $human->getDefectsAndProgress($obyvatelId);
             $content_params["name"] = $obyvatel["jmeno"] . " " . $obyvatel["prijmeni"];
             $content_params["form_progress_action"] = $this->makeUrlByRoute($this->route, array('action' => 'save_progress'));
+            $content_params["form_detail_action"] = $this->makeUrlByRoute($this->route, array('action' => 'save_detail'));
 
             $content = $this->renderPhp(DS1_DIR_ADMIN_MODULES_FROM_ADMIN . "human/templates/admin_human_detail.inc.php",
                 $content_params,
@@ -143,6 +144,19 @@ class human_controller extends ds1_base_controller
 
             $entity = $human->getProgress($result);
             return new JsonResponse($entity, 200);
+        }
+
+        // uložení detailu defektu
+        if ($action === "save_detail")
+        {
+            $result = $human->updateDefectDetail($_POST);
+
+            if (!$result || $result < 0)
+            {
+                return new JsonResponse("Detail se nepodařilo uložit.", 500);
+            }
+
+            return new JsonResponse();
         }
     }
 
