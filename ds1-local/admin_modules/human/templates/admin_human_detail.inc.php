@@ -23,7 +23,7 @@
                              ratiotop="<?php echo getRatioTop($entity->pozice_souradnice_x) ?>"
                              ratioleft="<?php echo getRatioLeft($entity->pozice_souradnice_y) ?>"
                              x="<?php echo $entity->pozice_souradnice_x ?>" y="<?php echo $entity->pozice_souradnice_y ?>"
-                             style="top:<?php echo $defect["souradnice_x"] ?>px; left:<?php echo $defect["souradnice_y"] ?>px;">
+                             style="top:<?php echo $entity->pozice_souradnice_x ?>px; left:<?php echo $entity->pozice_souradnice_y ?>px;">
                             <img src="<?php echo getPointPicture($entity->pozice_souradnice_y) ?>" alt="defect point">
                             <label><?php echo $entity->defekt_nazev ?></label>
                         </div>
